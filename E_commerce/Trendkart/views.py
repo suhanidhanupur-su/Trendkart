@@ -1,11 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
+from django.conf import settings
 from .models import CustomUser
 import uuid
+import os
 
 def home(request):
-   return render(request, 'base.html')
+    banner_images = []
+    banner_dir = os.path.join(settings.BASE_DIR, 'Static', 'images')
+    if os.path.isdir(banner_dir):
+        for filename in sorted(os.listdir(banner_dir)):
+            if filename.lower().startswith('banner') and filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+                banner_images.append(f'images/{filename}')
+
+    return render(request, 'base.html', {
+        'banner_images': banner_images
+    })
 
 def register(request):
     if request.method == 'POST':
@@ -52,3 +63,19 @@ def register(request):
             return redirect('register')
 
     return render(request, 'register.html')
+
+from .models import Category, Product
+
+
+def category(request):
+    categories = Category.objects.all()
+    return render(request, 'categories.html', {
+        'categories': categories
+    })
+
+
+def product(request):
+    products = Product.objects.all()
+    return render(request, 'product.html', {
+        'products': products
+    })

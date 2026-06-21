@@ -1,0 +1,14 @@
+<h1>Categories Page</h1>
+
+{% for category in categories %}
+    <h3>{{ category.category_name }}</h3>
+
+    {% if category.category_image %}
+        <img src="{{ category.category_image.url }}"
+             width="200">
+    {% endif %}
+
+    <hr>
+{% empty %}
+    <p>No categories found.</p>
+{% endfor %}
