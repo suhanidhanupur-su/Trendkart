@@ -79,3 +79,12 @@ def product(request):
     return render(request, 'product.html', {
         'products': products
     })
+
+
+from .models import Category
+
+def home(request):
+    categories = Category.objects.all()
+    return render(request, 'base.html', {
+        'categories': categories
+    })

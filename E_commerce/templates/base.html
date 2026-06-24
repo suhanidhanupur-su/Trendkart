@@ -218,6 +218,41 @@
 
 </div>
 
+
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">
+        Shop By Categories
+    </h2>
+
+    <div class="row">
+
+        {% for category in categories %}
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow">
+
+                <img src="{{ category.category_image.url }}"
+                     class="card-img-top"
+                     height="220"
+                     style="object-fit: cover;">
+
+                <div class="card-body text-center">
+                    <h5>{{ category.category_name }}</h5>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
     {% endblock %}
 </div>
 
