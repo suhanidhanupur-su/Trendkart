@@ -6,6 +6,7 @@ from .models import CustomUser
 import uuid
 import os
 
+
 def home(request):
     banner_images = []
     banner_dir = os.path.join(settings.BASE_DIR, 'Static', 'images')
@@ -87,4 +88,16 @@ def home(request):
     categories = Category.objects.all()
     return render(request, 'base.html', {
         'categories': categories
+    })
+
+
+from .models import Category, Product
+
+def home(request):
+    categories = Category.objects.all()
+    products = Product.objects.all()
+
+    return render(request, 'base.html', {
+        'categories': categories,
+        'products': products,
     })

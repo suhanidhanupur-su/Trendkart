@@ -251,6 +251,51 @@
 
     </div>
 
+
+    <div class="container mt-5">
+
+    <h2 class="text-center mb-4">
+        Featured Products
+    </h2>
+
+    <div class="row">
+
+        {% for product in products %}
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow border-0">
+
+                <img src="{{ product.product_image.url }}"
+                     class="card-img-top"
+                     height="250"
+                     style="object-fit: cover;">
+
+                <div class="card-body text-center">
+
+                    <h5>{{ product.product_name }}</h5>
+
+                    <p class="text-danger fw-bold">
+                        ₹ {{ product.product_price }}
+                    </p>
+
+                    <a href="#"
+                       class="btn btn-dark">
+                        View Product
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
 </div>
 
     {% endblock %}
