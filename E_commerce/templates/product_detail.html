@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<img src="{% static 'images/HEADER BANNER.png' %}"
+     class="img-fluid w-100 mb-5">
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <img src="{{ product.product_image.url }}"
+                 class="img-fluid rounded shadow">
+
+        </div>
+
+        <div class="col-md-6">
+
+            <h1>{{ product.product_name }}</h1>
+
+            <h3 class="text-danger">
+                ₹ {{ product.product_price }}
+            </h3>
+
+            <p class="mt-4">
+                {{ product.product_description }}
+            </p>
+
+            <button class="btn btn-dark">
+                Add To Cart
+            </button>
+
+            <button class="btn btn-outline-danger">
+                 Wishlist
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

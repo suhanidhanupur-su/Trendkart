@@ -1,14 +1,29 @@
-<h1>Categories Page</h1>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<img src="{% static 'images/header-banner.png' %}"
+     class="img-fluid w-100 mb-5">
+
+<h1 class="text-center mb-4">Categories Page</h1>
 
 {% for category in categories %}
-    <h3>{{ category.category_name }}</h3>
+    <div class="text-center mb-4">
 
-    {% if category.category_image %}
-        <img src="{{ category.category_image.url }}"
-             width="200">
-    {% endif %}
+        <h3>{{ category.category_name }}</h3>
+
+        {% if category.category_image %}
+            <img src="{{ category.category_image.url }}"
+                 width="200">
+        {% endif %}
+
+    </div>
 
     <hr>
+
 {% empty %}
-    <p>No categories found.</p>
+    <p class="text-center">No categories found.</p>
 {% endfor %}
+
+{% endblock %}

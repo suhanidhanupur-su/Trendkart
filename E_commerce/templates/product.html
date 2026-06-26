@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<img src="{% static 'images/bannnerrrrrrr.png' %}" class="img-fluid w-100 mb-5" alt="Product Banner">
+
+<div class="container">
+
+    <h2 class="text-center mb-5">
+        Our Products
+    </h2>
+
+    <div class="row">
+
+        {% for product in products %}
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow border-0 h-100">
+
+                <img src="{{ product.product_image.url }}" class="card-img-top" height="250" style="object-fit: cover;">
+
+                <div class="card-body text-center">
+
+                    <h5>{{ product.product_name }}</h5>
+
+                    <h6 class="text-danger">
+                        ₹ {{ product.product_price }}
+                    </h6>
+
+                    <p>
+                        {{ product.product_description|truncatewords:10 }}
+                    </p>
+
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-dark">
+                        View Product
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <h4 class="text-center">
+            No Products Available
+        </h4>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
