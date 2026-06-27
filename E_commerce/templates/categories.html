@@ -3,27 +3,52 @@
 
 {% block content %}
 
+<!-- Banner -->
 <img src="{% static 'images/header-banner.png' %}"
      class="img-fluid w-100 mb-5">
 
-<h1 class="text-center mb-4">Categories Page</h1>
 
-{% for category in categories %}
-    <div class="text-center mb-4">
+<div class="container py-5">
 
-        <h3>{{ category.category_name }}</h3>
+    <h1 class="text-center fw-bold mb-5 text-dark">
+        Shop By Categories
+    </h1>
 
-        {% if category.category_image %}
-            <img src="{{ category.category_image.url }}"
-                 width="200">
-        {% endif %}
+    <div class="row">
+
+        {% for category in categories %}
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+
+            <div class="card h-100 shadow border-0 rounded-4">
+
+                {% if category.category_image %}
+                    <img src="{{ category.category_image.url }}"
+                         class="card-img-top"
+                         style="height:250px; object-fit:cover;"
+                         alt="{{ category.category_name }}">
+                {% endif %}
+
+                <div class="card-body text-center">
+                    <h5 class="card-title fw-bold">
+                        {{ category.category_name }}
+                    </h5>
+
+                    <a href="#"
+                       class="btn btn-dark rounded-pill px-4">
+                        Explore
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+        <p class="text-center">No categories found.</p>
+        {% endfor %}
 
     </div>
 
-    <hr>
-
-{% empty %}
-    <p class="text-center">No categories found.</p>
-{% endfor %}
+</div>
 
 {% endblock %}

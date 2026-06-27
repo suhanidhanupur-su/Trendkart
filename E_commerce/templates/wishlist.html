@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Header Banner -->
+<div class="w-100 mb-4 d-flex align-items-center justify-content-center"
+     style="background: linear-gradient(90deg, #000, #FF4F81, #000); height: 72px;">
+    <h3 class="mb-0 fw-bold text-white" style="letter-spacing: 3px;">❤️ My Wishlist</h3>
+</div>
+
+<div class="container mb-5">
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success text-center">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if wishlist_items %}
+
+    <div class="row g-3">
+        {% for item in wishlist_items %}
+        <div class="col-md-3">
+            <div style="background:#fff; border-radius:14px; border:1px solid #f0e0e7;
+                        overflow:hidden; position:relative;">
+
+                <!-- Remove from Wishlist -->
+                <a href="{% url 'toggle_wishlist' item.product.id %}"
+                   style="position:absolute; top:10px; right:10px; background:#fff;
+                          border:none; border-radius:50%; width:30px; height:30px;
+                          display:flex; align-items:center; justify-content:center;
+                          box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;
+                          font-size:15px; text-decoration:none;">
+                    ❤️
+                </a>
+
+                <!-- SALE Badge -->
+                <span style="position:absolute; top:10px; left:10px; background:#222;
+                             color:#fff; font-size:10px; font-weight:700;
+                             padding:4px 9px; border-radius:12px; z-index:2;">
+                    SALE
+                </span>
+
+                <!-- Product Image -->
+                <img src="{{ item.product.product_image.url }}"
+                     style="width:100%; height:200px; object-fit:cover;">
+
+                <!-- Product Body -->
+                <div style="padding:12px 12px 14px; text-align:center;">
+                    <p style="font-size:13px; font-weight:700; color:#222; margin-bottom:4px;">
+                        {{ item.product.product_name }}
+                    </p>
+                    <p style="color:#FF4F81; font-weight:700; font-size:14px; margin-bottom:10px;">
+                        ₹ {{ item.product.product_price }}
+                    </p>
+
+                    <!-- Buttons -->
+                    <div style="display:flex; gap:6px;">
+                        <a href="{% url 'add_to_cart' item.product.id %}"
+                           style="flex:1; background:#111; color:#fff;
+                                  border-radius:7px; padding:7px 0; font-size:11px;
+                                  font-weight:600; text-align:center; text-decoration:none;
+                                  display:block;">
+                            Add to Cart
+                        </a>
+                        <a href="{% url 'product_detail' item.product.id %}"
+                           style="flex:1; background:#111; color:#fff;
+                                  border-radius:7px; padding:7px 0; font-size:11px;
+                                  font-weight:600; text-align:center; text-decoration:none;
+                                  display:block;">
+                            Buy Now
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+
+    <!-- Empty Wishlist -->
+    <div class="text-center py-5">
+        <div style="font-size:60px; margin-bottom:16px;">🤍</div>
+        <h4 class="fw-bold" style="color:#222;">Your wishlist is empty!</h4>
+        <p style="color:#aaa; margin-bottom:20px;">Save your favorite products</p>
+        <a href="{% url 'product' %}"
+           style="background:#FF4F81; color:#fff; padding:12px 28px;
+                  border-radius:10px; text-decoration:none; font-weight:700;">
+            View Products
+        </a>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

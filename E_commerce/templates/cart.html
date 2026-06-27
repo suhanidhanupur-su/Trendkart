@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Header Banner -->
+<div class="w-100 mb-4 d-flex align-items-center justify-content-center"
+     style="background: linear-gradient(90deg, #000, #FF4F81, #000); height: 72px;">
+    <h3 class="mb-0 fw-bold text-white" style="letter-spacing: 3px;">🛒 My Cart</h3>
+</div>
+
+<div class="container mb-5">
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success text-center">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if cart_items %}
+    <div class="row g-4">
+
+        <!-- Cart Items -->
+        <div class="col-md-8">
+            {% for item in cart_items %}
+            <div class="d-flex align-items-center gap-3 p-3 mb-3"
+                 style="background:#fff; border-radius:14px; border:1px solid #f0e0e7;
+                        box-shadow:0 2px 8px rgba(255,79,129,0.06);">
+
+                <!-- Image -->
+                <img src="{{ item.product.product_image.url }}"
+                     width="90" height="90"
+                     style="object-fit:cover; border-radius:10px; flex-shrink:0;">
+
+                <!-- Details -->
+                <div class="flex-grow-1">
+                    <h6 class="fw-bold mb-1">{{ item.product.product_name }}</h6>
+                    <p style="color:#FF4F81; font-weight:700; margin-bottom:8px;">
+                        ₹ {{ item.product.product_price }}
+                    </p>
+
+                    <!-- Quantity -->
+                    <form method="POST" action="{% url 'update_cart' item.id %}"
+                          class="d-flex align-items-center gap-2">
+                        {% csrf_token %}
+                        <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}"
+                                style="width:28px; height:28px; border-radius:6px; border:1px solid #eee;
+                                       background:#f9f9f9; font-weight:700; cursor:pointer;">−</button>
+                        <span style="font-weight:700; font-size:14px; min-width:24px; text-align:center;">
+                            {{ item.quantity }}
+                        </span>
+                        <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}"
+                                style="width:28px; height:28px; border-radius:6px; border:1px solid #eee;
+                                       background:#f9f9f9; font-weight:700; cursor:pointer;">+</button>
+                    </form>
+                </div>
+
+                <!-- Subtotal + Remove -->
+                <div class="text-end" style="flex-shrink:0;">
+                    <p class="fw-bold mb-2" style="color:#222;">
+                        ₹ {{ item.total_price }}
+                    </p>
+                    <a href="{% url 'remove_from_cart' item.id %}"
+                       style="color:#FF4F81; font-size:12px; font-weight:600; text-decoration:none;">
+                        ✖ Remove
+                    </a>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-md-4">
+            <div style="background:#fff; border-radius:14px; padding:20px;
+                        border:1.5px solid #FF4F81; box-shadow:0 2px 10px rgba(255,79,129,0.08);
+                        position:sticky; top:20px;">
+
+                <h5 class="fw-bold mb-3" style="color:#FF4F81;">Order Summary</h5>
+
+                <div class="d-flex justify-content-between mb-2" style="font-size:14px;">
+                    <span style="color:#888;">Subtotal</span>
+                    <span class="fw-bold">₹ {{ total }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2" style="font-size:14px;">
+                    <span style="color:#888;">Delivery</span>
+                    <span style="color:green; font-weight:600;">FREE</span>
+                </div>
+
+                <hr style="border-color:#f0e0e7;">
+
+                <div class="d-flex justify-content-between mb-4" style="font-size:16px;">
+                    <span class="fw-bold">Total</span>
+                    <span class="fw-bold" style="color:#FF4F81;">₹ {{ total }}</span>
+                </div>
+
+                <a href="#"
+                   style="display:block; width:100%; background:#111; color:#fff;
+                          border-radius:10px; padding:12px; text-align:center;
+                          font-weight:700; font-size:15px; text-decoration:none; margin-bottom:10px;">
+                    Proceed to Checkout
+                </a>
+
+                <a href="{% url 'product' %}"
+                   style="display:block; width:100%; background:#fff; color:#FF4F81;
+                          border:1.5px solid #FF4F81; border-radius:10px; padding:10px;
+                          text-align:center; font-weight:700; font-size:13px; text-decoration:none;">
+                    Continue Shopping
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+    {% else %}
+    <!-- Empty Cart -->
+    <div class="text-center py-5">
+        <div style="font-size:60px; margin-bottom:16px;">🛒</div>
+        <h4 class="fw-bold" style="color:#222;">Your cart is empty!</h4>
+        <p style="color:#aaa; margin-bottom:20px;">Add some products to get started</p>
+        <a href="{% url 'product' %}"
+           style="background:#FF4F81; color:#fff; padding:12px 28px;
+                  border-radius:10px; text-decoration:none; font-weight:700;">
+            Start Shopping
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

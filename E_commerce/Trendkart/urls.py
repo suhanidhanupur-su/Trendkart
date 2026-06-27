@@ -1,25 +1,34 @@
+# Trendkart/urls.py
 from django.urls import path
-from .views import *
+from . import views  # ← Import करो
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('register/', register, name='register'),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
+    path('', views.home, name='home'),
+    path('register/', views.register, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 
-    path('category/', category, name='category'),
-    path('product/', product, name='product'),
-    path('product/<int:pk>/', product_detail, name='product_detail'),
+    path('category/', views.category, name='category'),
+    path('product/', views.product, name='product'),
+    path('product/<int:pk>/', views.product_detail, name='product_detail'),
 
-    path('gallery/', gallery, name='gallery'),
-    path('about/', about, name='about'),
+    path('gallery/', views.gallery, name='gallery'),
+    path('about/', views.about, name='about'),
 
-    path('edit-profile/', edit_profile, name='edit_profile'),
+    path('edit-profile/', views.edit_profile, name='edit_profile'),
 
-    path('privacy-policy/', privacy_policy, name='privacy_policy'),
-    path('refund-policy/', refund_policy, name='refund_policy'),
-    path('shipping-policy/', shipping_policy, name='shipping_policy'),
-    path('terms/', terms, name='terms'),
-    path('mission/', mission, name='mission'),
-    path('vision/', vision, name='vision'),
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
+    path('refund-policy/', views.refund_policy, name='refund_policy'),
+    path('shipping-policy/', views.shipping_policy, name='shipping_policy'),
+    path('terms/', views.terms, name='terms'),
+    path('mission/', views.mission, name='mission'),
+    path('vision/', views.vision, name='vision'),
+
+    path('cart/', views.cart_view, name='cart'),
+    path('cart/add/<int:pk>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/remove/<int:pk>/', views.remove_from_cart, name='remove_from_cart'),
+    path('cart/update/<int:pk>/', views.update_cart, name='update_cart'),
+
+    path('wishlist/', views.wishlist_view, name='wishlist'),
+    path('wishlist/toggle/<int:pk>/', views.toggle_wishlist, name='toggle_wishlist'),
 ]

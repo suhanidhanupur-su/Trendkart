@@ -3,152 +3,209 @@
 
 {% block content %}
 
-<div class="w-100 mb-5 d-flex align-items-center justify-content-center"
-     style="background: linear-gradient(90deg, #FF4F81, #ff85a1, #FF4F81);
-            height: 80px; border-bottom: 3px solid #000;">
-    <h3 class="mb-0 fw-bold text-white" style="letter-spacing: 3px;">
-        🛍️ Shop Our Collection 🛍️
-    </h3>
+<!-- Header Banner -->
+<div class="w-100 mb-4 d-flex align-items-center justify-content-center"
+    style="background: linear-gradient(90deg, #000, #FF4F81, #000); height: 72px;">
+    <h3 class="mb-0 fw-bold text-white" style="letter-spacing: 3px;">✨ Our Products ✨</h3>
 </div>
 
-<!-- ===== FILTER BOX ===== -->
-<form method="GET" action="{% url 'product' %}">
+<div class="container">
+    <div class="row g-4">
 
-    <div style="background:#fffcfc; border-radius:16px; padding:22px 24px;
-                margin-bottom:22px; box-shadow:0 2px 16px rgba(255,79,129,0.08);">
+        <!-- ========== SIDEBAR ========== -->
+        <div class="col-md-3">
+            <div style="background:#fff; border-radius:14px; padding:20px 16px;
+                        box-shadow:0 2px 10px rgba(0,0,0,0.06); position:sticky; top:20px;">
 
-        <!-- Title -->
-        <p style="font-size:13px; font-weight:700; color:#888;
-                  text-transform:uppercase; letter-spacing:1px; margin-bottom:16px;">
-            Filter Products
-        </p>
+                <form method="GET" action="{% url 'product' %}" id="filterForm">
 
-        <div class="row g-3 align-items-end">
+                    <!-- Price Range -->
+                    <div class="mb-4">
+                        <p class="fw-bold mb-3 pb-2"
+                            style="font-size:14px; color:#222; border-bottom:2px solid #FF4F81;">
+                            Price Range
+                        </p>
+                        <input type="range" name="max_price" min="0" max="20000" step="100"
+                            value="{{ max_price|default:20000 }}" style="width:100%; accent-color:#FF4F81;"
+                            oninput="document.getElementById('priceDisplay').textContent = 'Up to ₹' + parseInt(this.value).toLocaleString('en-IN')">
+                        <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:6px;">
+                            <span>₹0</span><span>₹20,000</span>
+                        </div>
+                        <p id="priceDisplay" class="text-center fw-bold mt-2" style="font-size:13px; color:#FF4F81;">
+                            Up to ₹{{ max_price|default:"20,000" }}
+                        </p>
+                    </div>
 
-            <!-- Search -->
-            <div class="col-md-4">
-                <label style="font-size:12px; color:#aaa; font-weight:600;">Search</label>
-                <input type="text" name="search" value="{{ search_query }}"
-                       placeholder="Search products..."
-                       class="form-control mt-1"
-                       style="border:1.5px solid #eee; border-radius:10px; background:#fff;">
+                    <!-- Category -->
+                    <div class="mb-4">
+                        <p class="fw-bold mb-3 pb-2"
+                            style="font-size:14px; color:#222; border-bottom:2px solid #FF4F81;">
+                            Category
+                        </p>
+                        <div onclick="setCategory('')" class="cat-item {% if not selected_category %}active{% endif %}">
+                            All
+                        </div>
+                        {% for cat in categories %}
+                        <div onclick="setCategory('{{ cat.id }}')"
+                            class="cat-item {% if selected_category == cat.id|stringformat:'s' %}active{% endif %}">
+                            {{ cat.category_name }}
+                        </div>
+                        {% endfor %}
+                        <input type="hidden" name="category" id="categoryInput" value="{{ selected_category }}">
+                    </div>
+
+                    <!-- Apply Button -->
+                    <button type="submit" style="width:100%; padding:10px; background:#FF4F81; color:#fff;
+                               border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                        Apply Filters
+                    </button>
+
+                    <!-- Clear Button -->
+                    <a href="{% url 'product' %}" style="display:block; width:100%; padding:8px; background:#fff; color:#aaa;
+                               border:1px solid #eee; border-radius:9px; font-size:12px; font-weight:600;
+                               text-align:center; text-decoration:none; margin-top:8px;">
+                        ✖ Clear All
+                    </a>
+
+                </form>
             </div>
-
-            <!-- Category -->
-            <div class="col-md-3">
-                <label style="font-size:12px; color:#aaa; font-weight:600;">Category</label>
-                <select name="category" class="form-select mt-1"
-                        style="border:1.5px solid #eee; border-radius:10px; background:#fff;">
-                    <option value="">All Categories</option>
-                    {% for cat in categories %}
-                    <option value="{{ cat.id }}"
-                        {% if selected_category == cat.id|stringformat:'s' %}selected{% endif %}>
-                        {{ cat.category_name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <!-- Min Price -->
-            <div class="col-md-2">
-                <label style="font-size:12px; color:#aaa; font-weight:600;">Min ₹</label>
-                <input type="number" name="min_price" value="{{ min_price }}"
-                       placeholder="0" class="form-control mt-1"
-                       style="border:1.5px solid #eee; border-radius:10px; background:#fff;">
-            </div>
-
-            <!-- Max Price -->
-            <div class="col-md-2">
-                <label style="font-size:12px; color:#aaa; font-weight:600;">Max ₹</label>
-                <input type="number" name="max_price" value="{{ max_price }}"
-                       placeholder="99999" class="form-control mt-1"
-                       style="border:1.5px solid #eee; border-radius:10px; background:#fff;">
-            </div>
-
-            <!-- Search Button -->
-            <div class="col-md-1">
-                <button type="submit" class="btn w-100 fw-bold mt-1"
-                        style="background:#FF4F81; color:#fff; border:none; border-radius:10px;">
-                    Search
-                </button>
-            </div>
-
         </div>
 
-        <!-- Bottom: Pills + Clear -->
-        <div class="d-flex align-items-center justify-content-between mt-3 pt-3"
-             style="border-top:1px solid #f5e0e7;">
+        <!-- ========== RIGHT SIDE ========== -->
+        <div class="col-md-9">
 
-            <!-- Category Pills -->
-            <div class="d-flex flex-wrap gap-2">
-                <a href="{% url 'product' %}"
-                   class="text-decoration-none px-3 py-1 rounded-pill fw-semibold"
-                   style="border:1.5px solid {% if not selected_category %}#FF4F81; background:#FF4F81; color:#fff;{% else %}#eee; background:#fff; color:#888;{% endif %} font-size:13px;">
-                   All
-                </a>
-                {% for cat in categories %}
-                <a href="{% url 'product' %}?category={{ cat.id }}"
-                   class="text-decoration-none px-3 py-1 rounded-pill fw-semibold"
-                   style="border:1.5px solid {% if selected_category == cat.id|stringformat:'s' %}#FF4F81; background:#FF4F81; color:#fff;{% else %}#eee; background:#fff; color:#888;{% endif %} font-size:13px;">
-                   {{ cat.category_name }}
-                </a>
-                {% endfor %}
+            <!-- Search + Sort -->
+            <div class="d-flex gap-3 mb-3">
+                <form method="GET" action="{% url 'product' %}" class="flex-grow-1 d-flex gap-3">
+                    <input type="hidden" name="category" value="{{ selected_category }}">
+                    <input type="hidden" name="max_price" value="{{ max_price }}">
+
+                    <div style="position:relative; flex:1;">
+                        <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#aaa;">🔍</span>
+                        <input type="text" name="search" value="{{ search_query }}" placeholder="Search products..."
+                            style="width:100%; padding:11px 14px 11px 36px; border:1.5px solid #eee;
+                                   border-radius:10px; font-size:14px; background:#fff; outline:none;">
+                    </div>
+
+                    <select name="sort" style="padding:11px 14px; border:1.5px solid #eee; border-radius:10px;
+                               font-size:13px; background:#fff; color:#555; outline:none; min-width:150px;"
+                        onchange="this.form.submit()">
+                        <option value="">Sort by</option>
+                        <option value="low" {% if sort == 'low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="high" {% if sort == 'high' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                </form>
             </div>
 
-            <!-- Clear -->
-            {% if search_query or selected_category or min_price or max_price %}
-            <a href="{% url 'product' %}"
-               style="font-size:12px; color:#ccc; font-weight:600;
-                      text-decoration:none;">
-                ✖ Clear all
-            </a>
-            {% endif %}
+            <!-- Result Count -->
+            <p style="font-size:13px; color:#aaa;" class="mb-3">{{ products|length }} product(s) found</p>
 
-        </div>
+            <!-- Products Grid -->
+            <div class="row g-3">
 
-    </div>
+                {% for product in products %}
+                <div class="col-md-4">
+                    <div style="background:#fff; border-radius:14px; border:1px solid #f0e0e7;
+                                overflow:hidden; position:relative;">
 
-</form>
-<!-- ===== FILTER BOX END ===== -->
+                        <!-- SALE Badge -->
+                        <span style="position:absolute; top:10px; left:10px; background:#222;
+                                     color:#fff; font-size:10px; font-weight:700;
+                                     padding:4px 9px; border-radius:12px; z-index:2;">
+                            SALE
+                        </span>
 
-    <!-- Result Count -->
-    <p style="color:#888; font-size:13px;" class="mb-3">{{ products|length }} product(s) found</p>
+                        <!-- Wishlist Heart -->
+                        <a href="{% url 'toggle_wishlist' product.id %}" 
+                           style="position:absolute; top:10px; right:10px; background:#fff;
+                                  border:none; border-radius:50%; width:30px; height:30px;
+                                  display:flex; align-items:center; justify-content:center;
+                                  box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;
+                                  font-size:15px; text-decoration:none; cursor:pointer;
+                                  text-align:center; line-height:30px;">
+                            {% if user.is_authenticated %}
+                                {% if product.id in wishlist_ids %}❤️{% else %}🤍{% endif %}
+                            {% else %}
+                                🤍
+                            {% endif %}
+                        </a>
 
-    <!-- Products Grid -->
-    <div class="row">
-        {% for product in products %}
-        <div class="col-md-3 mb-4">
-            <div class="card border-0 h-100"
-                 style="border-radius:12px; border:1px solid #f0d0da !important; box-shadow:0 2px 10px rgba(255,79,129,0.07);">
-                <img src="{{ product.product_image.url }}"
-                     class="card-img-top"
-                     height="220"
-                     style="object-fit:cover; border-radius:12px 12px 0 0;">
-                <div class="card-body text-center">
-                    <h5 style="font-size:15px; font-weight:600;">{{ product.product_name }}</h5>
-                    <p style="color:#FF4F81; font-weight:700; font-size:15px;">₹ {{ product.product_price }}</p>
-                    <p style="font-size:12px; color:#888;">{{ product.product_description|truncatewords:8 }}</p>
-                    <a href="{% url 'product_detail' product.id %}"
-                       class="btn"
-                       style="background:#222; color:#fff; border-radius:7px; font-size:13px; font-weight:600;">
-                        View Product
+                        <!-- Product Image -->
+                        <img src="{{ product.product_image.url }}" style="width:100%; height:180px; object-fit:cover;">
+
+                        <!-- Product Body -->
+                        <div style="padding:12px 12px 14px; text-align:center;">
+                            <p style="font-size:13px; font-weight:700; color:#222; margin-bottom:4px;">
+                                {{ product.product_name }}
+                            </p>
+                            <p style="color:#FF4F81; font-weight:700; font-size:14px; margin-bottom:10px;">
+                                ₹ {{ product.product_price }}
+                            </p>
+
+                            <!-- Buttons -->
+                            <div style="display:flex; gap:6px;">
+                                <a href="{% url 'add_to_cart' product.id %}" style="flex:1; background:#111; color:#fff;
+                                          border-radius:7px; padding:7px 0; font-size:11px;
+                                          font-weight:600; text-align:center; text-decoration:none;
+                                          display:block;">
+                                    Add to Cart
+                                </a>
+                                <a href="{% url 'product_detail' product.id %}" style="flex:1; background:#111; color:#fff;
+                                          border-radius:7px; padding:7px 0; font-size:11px;
+                                          font-weight:600; text-align:center; text-decoration:none;
+                                          display:block;">
+                                    Buy Now
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <h4 style="color:#FF4F81;">😔 No products found!</h4>
+                    <p style="color:#aaa;">Try changing filters</p>
+                    <a href="{% url 'product' %}" style="background:#FF4F81; color:#fff; padding:10px 24px;
+                              border-radius:9px; text-decoration:none; font-weight:700;">
+                        View All Products
                     </a>
                 </div>
+                {% endfor %}
+
             </div>
+
         </div>
 
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <h4>😔 No products found!</h4>
-            <p style="color:#888;">Try changing your filters.</p>
-            <a href="{% url 'product' %}" class="btn mt-2"
-               style="background:#FF4F81; color:#fff; border-radius:8px; font-weight:600;">
-                View All Products
-            </a>
-        </div>
-        {% endfor %}
     </div>
-
 </div>
+
+<style>
+    .cat-item {
+        padding: 9px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #555;
+        cursor: pointer;
+        font-weight: 500;
+        margin-bottom: 4px;
+        background: #f9f9f9;
+        border: 1px solid #eee;
+    }
+
+    .cat-item.active {
+        background: #FF4F81;
+        color: #fff;
+        border-color: #FF4F81;
+        font-weight: 700;
+    }
+</style>
+
+<script>
+    function setCategory(id) {
+        document.getElementById('categoryInput').value = id;
+        document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+</script>
 
 {% endblock %}
