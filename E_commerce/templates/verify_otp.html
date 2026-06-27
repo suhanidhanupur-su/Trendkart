@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5" style="max-width:420px;">
+    <div style="background:#fff; border-radius:16px; padding:36px 32px;
+                border:1.5px solid #FF4F81;
+                box-shadow:0 4px 18px rgba(255,79,129,0.1);">
+
+        <div class="text-center mb-4">
+            <div style="font-size:48px;">📧</div>
+            <h2 class="fw-bold mt-2" style="color:#FF4F81;">Verify OTP</h2>
+            <p style="color:#888; font-size:13px;">
+                An OTP has been sent to:<br>
+                <strong style="color:#222;">{{ email }}</strong>
+            </p>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'sahi' in message.tags or 'verify' in message.tags %}alert-success{% else %}alert-danger{% endif %} text-center py-2" style="font-size:13px;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">ENTER 6-DIGIT OTP</label>
+            <input type="text" name="otp"
+                   maxlength="6"
+                   placeholder="_ _ _ _ _ _"
+                   class="form-control mt-1 mb-4 text-center"
+                   style="border:1.5px solid #ffc0d1; background:#FFF5F7;
+                          border-radius:8px; padding:14px; font-size:22px;
+                          font-weight:700; letter-spacing:8px; color:#FF4F81;"
+                   required autofocus>
+
+            <button type="submit"
+                    style="width:100%; background:#FF4F81; color:#fff; border:none;
+                           border-radius:10px; padding:12px; font-size:15px;
+                           font-weight:700; cursor:pointer;">
+                ✅ Verify OTP
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p style="font-size:13px; color:#888; mb-1;">Didn't receive the OTP?</p>
+            <a href="{% url 'resend_otp' %}"
+               style="color:#FF4F81; font-weight:700; font-size:13px; text-decoration:none;">
+                🔄 Resend OTP
+            </a>
+        </div>
+
+        <div class="text-center mt-3">
+            <a href="{% url 'register' %}"
+               style="color:#aaa; font-size:12px; text-decoration:none;">
+                ← Back to Registration
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

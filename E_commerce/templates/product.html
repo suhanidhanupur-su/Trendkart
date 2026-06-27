@@ -8,6 +8,11 @@
     style="background: linear-gradient(90deg, #000, #FF4F81, #000); height: 72px;">
     <h3 class="mb-0 fw-bold text-white" style="letter-spacing: 3px;">✨ Our Products ✨</h3>
 </div>
+{% if search %}
+<h3 class="mb-4">
+    Search Results For "{{ search }}"
+</h3>
+{% endif %}
 
 <div class="container">
     <div class="row g-4">

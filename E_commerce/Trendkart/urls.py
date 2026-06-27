@@ -1,6 +1,8 @@
 # Trendkart/urls.py
 from django.urls import path
 from . import views  # ← Import करो
+from .views import verify_otp, resend_otp
+
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -31,4 +33,8 @@ urlpatterns = [
 
     path('wishlist/', views.wishlist_view, name='wishlist'),
     path('wishlist/toggle/<int:pk>/', views.toggle_wishlist, name='toggle_wishlist'),
+
+
+    path('verify-otp/', verify_otp, name='verify_otp'),
+path('resend-otp/', resend_otp, name='resend_otp'),
 ]

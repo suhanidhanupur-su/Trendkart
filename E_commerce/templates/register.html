@@ -1,9 +1,92 @@
-<form method="POST">
-    {% csrf_token %}
+{% extends 'base.html' %}
 
-    <input type="text" name="username" placeholder="Username">
-    <input type="email" name="email" placeholder="Email">
-    <input type="password" name="password" placeholder="Password">
+{% block content %}
 
-    <button type="submit">Register</button>
-</form>
+<div class="container mt-5 mb-5" style="max-width:500px;">
+    <div style="background:#fff; border-radius:16px; padding:36px 32px;
+                border:1.5px solid #FF4F81;
+                box-shadow:0 4px 18px rgba(255,79,129,0.1);">
+
+        <h2 class="text-center fw-bold mb-4" style="color:#FF4F81;">
+            Create Account 🛍️
+        </h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'successful' in message.tags %}alert-success{% else %}alert-danger{% endif %} text-center py-2"
+             style="font-size:13px;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Full Name -->
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">FULL NAME</label>
+            <input type="text" name="full_name"
+                   placeholder="Enter your full name"
+                   class="form-control mb-3 mt-1"
+                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 14px;"
+                   required>
+
+            <!-- Email -->
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">EMAIL</label>
+            <input type="email" name="email"
+                   placeholder="yourname@email.com"
+                   class="form-control mb-3 mt-1"
+                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 14px;"
+                   required>
+
+            <!-- Mobile -->
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">MOBILE NUMBER</label>
+            <input type="text" name="mobile_no"
+                   placeholder="10-digit mobile number"
+                   class="form-control mb-3 mt-1"
+                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 14px;"
+                   required>
+
+            <!-- Address -->
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">ADDRESS</label>
+            <textarea name="address" rows="2"
+                      placeholder="Enter your address"
+                      class="form-control mb-3 mt-1"
+                      style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 14px;"
+                      required></textarea>
+
+            <!-- Password -->
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">PASSWORD</label>
+            <input type="password" name="password"
+                   placeholder="Create a password"
+                   class="form-control mb-3 mt-1"
+                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 14px;"
+                   required>
+
+            <!-- Confirm Password -->
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">CONFIRM PASSWORD</label>
+            <input type="password" name="confirm_password"
+                   placeholder="Confirm your password"
+                   class="form-control mb-4 mt-1"
+                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 14px;"
+                   required>
+
+            <button type="submit"
+                    style="width:100%; background:#FF4F81; color:#fff; border:none;
+                           border-radius:10px; padding:12px; font-size:15px;
+                           font-weight:700; cursor:pointer;">
+                Register
+            </button>
+        </form>
+
+        <p class="text-center mt-3" style="font-size:13px; color:#888;">
+            Already have an account?
+            <a href="{% url 'login' %}" style="color:#FF4F81; font-weight:600;">
+                Login here
+            </a>
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

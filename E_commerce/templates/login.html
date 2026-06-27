@@ -2,49 +2,58 @@
 
 {% block content %}
 
-<div class="container mt-5" style="max-width:500px;">
+<div class="container mt-5 mb-5" style="max-width:450px;">
+    <div style="background:#fff; border-radius:16px; padding:36px 32px;
+                border:1.5px solid #FF4F81;
+                box-shadow:0 4px 18px rgba(255,79,129,0.1);">
 
-    <div class="card shadow p-4">
-
-        <h2 class="text-center mb-4">
-            Login
+        <h2 class="text-center fw-bold mb-4" style="color:#FF4F81;">
+            Welcome Back 👋
         </h2>
 
-        <form method="POST">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger text-center py-2" style="font-size:13px;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
 
+        <form method="POST">
             {% csrf_token %}
 
-            <input
-                type="text"
-                name="username"
-                class="form-control mb-3"
-                placeholder="Username"
-            >
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">EMAIL</label>
+            <input type="email" name="email"
+                   placeholder="your@email.com"
+                   class="form-control mb-3 mt-1"
+                   style="border:1.5px solid #ffc0d1; background:#FFF5F7;
+                          border-radius:8px; padding:10px 14px;"
+                   required>
 
-            <input
-                type="password"
-                name="password"
-                class="form-control mb-3"
-                placeholder="Password"
-            >
+            <label style="font-size:12px; font-weight:600; color:#FF4F81;">PASSWORD</label>
+            <input type="password" name="password"
+                   placeholder="Password"
+                   class="form-control mb-4 mt-1"
+                   style="border:1.5px solid #ffc0d1; background:#FFF5F7;
+                          border-radius:8px; padding:10px 14px;"
+                   required>
 
-            <button class="btn btn-dark w-100">
+            <button type="submit"
+                    style="width:100%; background:#FF4F81; color:#fff; border:none;
+                           border-radius:10px; padding:12px; font-size:15px;
+                           font-weight:700; cursor:pointer;">
                 Login
             </button>
-
         </form>
 
-        <p class="text-center mt-3">
+        <p class="text-center mt-3" style="font-size:13px; color:#888;">
             Don't have an account?
-
-            <a href="{% url 'register' %}">
-                Register
+            <a href="{% url 'register' %}" style="color:#FF4F81; font-weight:600;">
+                Register here
             </a>
         </p>
 
     </div>
-
 </div>
 
 {% endblock %}
-

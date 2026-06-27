@@ -74,3 +74,24 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.product.product_name}"
+    
+
+# --------------------OTP-----------------------------------------------
+import random
+from django.utils import timezone
+
+class OTP(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
+
+    def is_expired(self):
+        # OTP 10 minute mein expire ho jayega
+        return timezone.now() > self.created_at + timezone.timedelta(minutes=10)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.otp}"
+    
+
+    
