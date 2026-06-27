@@ -3,54 +3,150 @@
 
 {% block content %}
 
-<img src="{% static 'images/bannnerrrrrrr.png' %}" class="img-fluid w-100 mb-5" alt="Product Banner">
+<div class="w-100 mb-5 d-flex align-items-center justify-content-center"
+     style="background: linear-gradient(90deg, #FF4F81, #ff85a1, #FF4F81);
+            height: 80px; border-bottom: 3px solid #000;">
+    <h3 class="mb-0 fw-bold text-white" style="letter-spacing: 3px;">
+        🛍️ Shop Our Collection 🛍️
+    </h3>
+</div>
 
-<div class="container">
+<!-- ===== FILTER BOX ===== -->
+<form method="GET" action="{% url 'product' %}">
 
-    <h2 class="text-center mb-5">
-        Our Products
-    </h2>
+    <div style="background:#fffcfc; border-radius:16px; padding:22px 24px;
+                margin-bottom:22px; box-shadow:0 2px 16px rgba(255,79,129,0.08);">
 
-    <div class="row">
+        <!-- Title -->
+        <p style="font-size:13px; font-weight:700; color:#888;
+                  text-transform:uppercase; letter-spacing:1px; margin-bottom:16px;">
+            Filter Products
+        </p>
 
-        {% for product in products %}
+        <div class="row g-3 align-items-end">
 
-        <div class="col-md-3 mb-4">
+            <!-- Search -->
+            <div class="col-md-4">
+                <label style="font-size:12px; color:#aaa; font-weight:600;">Search</label>
+                <input type="text" name="search" value="{{ search_query }}"
+                       placeholder="Search products..."
+                       class="form-control mt-1"
+                       style="border:1.5px solid #eee; border-radius:10px; background:#fff;">
+            </div>
 
-            <div class="card shadow border-0 h-100">
+            <!-- Category -->
+            <div class="col-md-3">
+                <label style="font-size:12px; color:#aaa; font-weight:600;">Category</label>
+                <select name="category" class="form-select mt-1"
+                        style="border:1.5px solid #eee; border-radius:10px; background:#fff;">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}"
+                        {% if selected_category == cat.id|stringformat:'s' %}selected{% endif %}>
+                        {{ cat.category_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-                <img src="{{ product.product_image.url }}" class="card-img-top" height="250" style="object-fit: cover;">
+            <!-- Min Price -->
+            <div class="col-md-2">
+                <label style="font-size:12px; color:#aaa; font-weight:600;">Min ₹</label>
+                <input type="number" name="min_price" value="{{ min_price }}"
+                       placeholder="0" class="form-control mt-1"
+                       style="border:1.5px solid #eee; border-radius:10px; background:#fff;">
+            </div>
 
-                <div class="card-body text-center">
+            <!-- Max Price -->
+            <div class="col-md-2">
+                <label style="font-size:12px; color:#aaa; font-weight:600;">Max ₹</label>
+                <input type="number" name="max_price" value="{{ max_price }}"
+                       placeholder="99999" class="form-control mt-1"
+                       style="border:1.5px solid #eee; border-radius:10px; background:#fff;">
+            </div>
 
-                    <h5>{{ product.product_name }}</h5>
-
-                    <h6 class="text-danger">
-                        ₹ {{ product.product_price }}
-                    </h6>
-
-                    <p>
-                        {{ product.product_description|truncatewords:10 }}
-                    </p>
-
-                    <a href="{% url 'product_detail' product.id %}" class="btn btn-dark">
-                        View Product
-                    </a>
-
-                </div>
-
+            <!-- Search Button -->
+            <div class="col-md-1">
+                <button type="submit" class="btn w-100 fw-bold mt-1"
+                        style="background:#FF4F81; color:#fff; border:none; border-radius:10px;">
+                    Search
+                </button>
             </div>
 
         </div>
 
+        <!-- Bottom: Pills + Clear -->
+        <div class="d-flex align-items-center justify-content-between mt-3 pt-3"
+             style="border-top:1px solid #f5e0e7;">
+
+            <!-- Category Pills -->
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'product' %}"
+                   class="text-decoration-none px-3 py-1 rounded-pill fw-semibold"
+                   style="border:1.5px solid {% if not selected_category %}#FF4F81; background:#FF4F81; color:#fff;{% else %}#eee; background:#fff; color:#888;{% endif %} font-size:13px;">
+                   All
+                </a>
+                {% for cat in categories %}
+                <a href="{% url 'product' %}?category={{ cat.id }}"
+                   class="text-decoration-none px-3 py-1 rounded-pill fw-semibold"
+                   style="border:1.5px solid {% if selected_category == cat.id|stringformat:'s' %}#FF4F81; background:#FF4F81; color:#fff;{% else %}#eee; background:#fff; color:#888;{% endif %} font-size:13px;">
+                   {{ cat.category_name }}
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- Clear -->
+            {% if search_query or selected_category or min_price or max_price %}
+            <a href="{% url 'product' %}"
+               style="font-size:12px; color:#ccc; font-weight:600;
+                      text-decoration:none;">
+                ✖ Clear all
+            </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</form>
+<!-- ===== FILTER BOX END ===== -->
+
+    <!-- Result Count -->
+    <p style="color:#888; font-size:13px;" class="mb-3">{{ products|length }} product(s) found</p>
+
+    <!-- Products Grid -->
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 h-100"
+                 style="border-radius:12px; border:1px solid #f0d0da !important; box-shadow:0 2px 10px rgba(255,79,129,0.07);">
+                <img src="{{ product.product_image.url }}"
+                     class="card-img-top"
+                     height="220"
+                     style="object-fit:cover; border-radius:12px 12px 0 0;">
+                <div class="card-body text-center">
+                    <h5 style="font-size:15px; font-weight:600;">{{ product.product_name }}</h5>
+                    <p style="color:#FF4F81; font-weight:700; font-size:15px;">₹ {{ product.product_price }}</p>
+                    <p style="font-size:12px; color:#888;">{{ product.product_description|truncatewords:8 }}</p>
+                    <a href="{% url 'product_detail' product.id %}"
+                       class="btn"
+                       style="background:#222; color:#fff; border-radius:7px; font-size:13px; font-weight:600;">
+                        View Product
+                    </a>
+                </div>
+            </div>
+        </div>
+
         {% empty %}
-
-        <h4 class="text-center">
-            No Products Available
-        </h4>
-
+        <div class="col-12 text-center py-5">
+            <h4>😔 No products found!</h4>
+            <p style="color:#888;">Try changing your filters.</p>
+            <a href="{% url 'product' %}" class="btn mt-2"
+               style="background:#FF4F81; color:#fff; border-radius:8px; font-weight:600;">
+                View All Products
+            </a>
+        </div>
         {% endfor %}
-
     </div>
 
 </div>

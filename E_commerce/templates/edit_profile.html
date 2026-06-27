@@ -1,8 +1,174 @@
-<form method="POST">
-    {% csrf_token %}
+{% extends 'base.html' %}
+{% load static %}
 
-    <input type="text" name="username" value="{{ user.username }}">
-    <input type="email" name="email" value="{{ user.email }}">
+{% block content %}
 
-    <button type="submit">Update</button>
-</form>
+<div class="container mt-5 mb-5">
+
+    <!-- Page Title -->
+    <h2 class="text-center mb-4 fw-bold" style="color:#FF4F81;">
+        My Profile
+    </h2>
+
+    <!-- Messages -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success text-center" role="alert">
+        ✅ {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="row justify-content-center">
+
+        <!-- Left: Profile Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 text-center p-4"
+                 style="border-radius:16px; border:1.5px solid #FF4F81 !important;
+                        box-shadow:0 4px 18px rgba(255,79,129,0.1);">
+
+                <!-- Profile Image -->
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}"
+                     class="rounded-circle mb-3"
+                     width="110" height="110"
+                     style="object-fit:cover; border:3px solid #FF4F81;">
+                {% else %}
+                <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
+                     style="width:110px; height:110px; background:#FF4F81; border:3px solid #FF4F81;">
+                    <span style="font-size:40px; color:#fff; font-weight:700;">
+                        {{ user.full_name|first|upper }}
+                    </span>
+                </div>
+                {% endif %}
+
+                <h5 class="fw-bold mb-1">{{ user.full_name|default:user.username }}</h5>
+                <p style="color:#FF4F81; font-size:13px;">{{ user.email }}</p>
+
+                <hr style="border-color:#ffc0d1;">
+
+                <div class="text-start" style="font-size:13px; color:#666;">
+                    <p class="mb-2">
+                        <i class="bi bi-phone me-2" style="color:#FF4F81;"></i>
+                        {{ user.mobile_no|default:"Not added" }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-geo-alt me-2" style="color:#FF4F81;"></i>
+                        {{ user.address|default:"Not added"|truncatewords:5 }}
+                    </p>
+                    <p class="mb-0">
+                        <i class="bi bi-person me-2" style="color:#FF4F81;"></i>
+                        {{ user.gender|default:"Not added" }}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Right: Edit Form -->
+        <div class="col-md-7">
+            <div class="card border-0 p-4"
+                 style="border-radius:16px; border:1.5px solid #FF4F81 !important;
+                        box-shadow:0 4px 18px rgba(255,79,129,0.1);">
+
+                <h5 class="fw-bold mb-4" style="color:#FF4F81;">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Information
+                </h5>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+
+                        <!-- Full Name -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size:13px; color:#FF4F81;">Full Name</label>
+                            <input type="text" name="full_name"
+                                   value="{{ user.full_name }}"
+                                   class="form-control"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size:13px; color:#FF4F81;">Email</label>
+                            <input type="email" name="email"
+                                   value="{{ user.email }}"
+                                   class="form-control"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;">
+                        </div>
+
+                        <!-- Mobile -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size:13px; color:#FF4F81;">Mobile Number</label>
+                            <input type="text" name="mobile_no"
+                                   value="{{ user.mobile_no }}"
+                                   class="form-control"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;">
+                        </div>
+
+                        <!-- Alternate Mobile -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size:13px; color:#FF4F81;">Alternate Mobile</label>
+                            <input type="text" name="alternate_mobile_no"
+                                   value="{{ user.alternate_mobile_no }}"
+                                   class="form-control"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;">
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size:13px; color:#FF4F81;">Date of Birth</label>
+                            <input type="date" name="dob"
+                                   value="{{ user.dob|date:'Y-m-d' }}"
+                                   class="form-control"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;">
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size:13px; color:#FF4F81;">Gender</label>
+                            <select name="gender" class="form-select"
+                                    style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;">
+                                <option value="">Select Gender</option>
+                                <option value="Male"   {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other"  {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" style="font-size:13px; color:#FF4F81;">Address</label>
+                            <textarea name="address" rows="3"
+                                      class="form-control"
+                                      style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;">{{ user.address }}</textarea>
+                        </div>
+
+                        <!-- Profile Image -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" style="font-size:13px; color:#FF4F81;">Profile Photo</label>
+                            <input type="file" name="profile_image"
+                                   accept="image/*"
+                                   class="form-control"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-12 mt-2">
+                            <button type="submit" class="btn w-100 fw-bold py-2"
+                                    style="background:#FF4F81; color:#fff; border-radius:10px; border:none; font-size:15px;">
+                                💾 Save Changes
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

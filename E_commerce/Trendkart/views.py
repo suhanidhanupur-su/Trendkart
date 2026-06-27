@@ -156,6 +156,47 @@ def mission(request):
 def vision(request):
     return render(request, 'vision.html')
 
+# -------------------filter-------------------------------------------
 
-
+def product(request):
+    categories = Category.objects.all()
+    selected_category = request.GET.get('category')  # URL से category id लो
     
+    if selected_category:
+        products = Product.objects.filter(category__id=selected_category)
+    else:
+        products = Product.objects.all()
+    
+    return render(request, 'product.html', {
+        'products': products,
+        'categories': categories,
+        'selected_category': selected_category,
+    })
+
+
+
+
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url='login')
+def edit_profile(request):
+    user = request.user
+
+    if request.method == "POST":
+        user.full_name = request.POST.get('full_name', '')
+        user.email = request.POST.get('email', '')
+        user.mobile_no = request.POST.get('mobile_no', '')
+        user.alternate_mobile_no = request.POST.get('alternate_mobile_no', '')
+        user.address = request.POST.get('address', '')
+        user.dob = request.POST.get('dob') or None
+        user.gender = request.POST.get('gender', '')
+
+        # Profile image upload
+        if request.FILES.get('profile_image'):
+            user.profile_image = request.FILES['profile_image']
+
+        user.save()
+        messages.success(request, "Profile updated successfully!")
+        return redirect('edit_profile')
+
+    return render(request, 'edit_profile.html', {'user': user})
