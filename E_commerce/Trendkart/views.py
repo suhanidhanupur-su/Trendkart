@@ -553,3 +553,72 @@ def product(request):
         'wishlist_ids': wishlist_ids,
         'search': search_query,
     })
+
+
+# ------------------------------Order models-----------------
+
+
+from .models import Cart, Wishlist, OTP, Order, OrderItem
+
+@login_required(login_url='login')
+def checkout(request):
+    cart_items = Cart.objects.filter(user=request.user)
+
+    if not cart_items:
+        messages.error(request, 'Cart khali hai!')
+        return redirect('cart')
+
+    total = sum(item.total_price() for item in cart_items)
+
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        mobile = request.POST.get('mobile')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        pincode = request.POST.get('pincode')
+        payment_method = request.POST.get('payment_method')
+
+        # Order banao
+        order = Order.objects.create(
+            user=request.user,
+            full_name=full_name,
+            mobile=mobile,
+            address=address,
+            city=city,
+            pincode=pincode,
+            payment_method=payment_method,
+            total_amount=total,
+        )
+
+        # Order items banao
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.product.product_price,
+            )
+
+        # Cart clear karo
+        cart_items.delete()
+
+        messages.success(request, 'Order place ho gaya!')
+        return redirect('order_confirm', pk=order.id)
+
+    return render(request, 'checkout.html', {
+        'cart_items': cart_items,
+        'total': total,
+        'user': request.user,
+    })
+
+
+@login_required(login_url='login')
+def order_confirm(request, pk):
+    order = get_object_or_404(Order, id=pk, user=request.user)
+    return render(request, 'order_confirm.html', {'order': order})
+
+
+@login_required(login_url='login')
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'my_orders.html', {'orders': orders})
