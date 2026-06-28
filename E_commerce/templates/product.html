@@ -80,27 +80,24 @@
         <div class="col-md-9">
 
             <!-- Search + Sort -->
-            <div class="d-flex gap-3 mb-3">
-                <form method="GET" action="{% url 'product' %}" class="flex-grow-1 d-flex gap-3">
-                    <input type="hidden" name="category" value="{{ selected_category }}">
-                    <input type="hidden" name="max_price" value="{{ max_price }}">
+           <!-- Search + Sort -->
+<div class="d-flex gap-3 mb-3">
+    <form method="GET" action="{% url 'product' %}" class="flex-grow-1 d-flex gap-3">
+        <input type="hidden" name="category" value="{{ selected_category }}">
+        <input type="hidden" name="max_price" value="{{ max_price }}">
 
-                    <div style="position:relative; flex:1;">
-                        <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#aaa;">🔍</span>
-                        <input type="text" name="search" value="{{ search_query }}" placeholder="Search products..."
-                            style="width:100%; padding:11px 14px 11px 36px; border:1.5px solid #eee;
-                                   border-radius:10px; font-size:14px; background:#fff; outline:none;">
-                    </div>
+        <!-- Search hata diya ✅ -->
 
-                    <select name="sort" style="padding:11px 14px; border:1.5px solid #eee; border-radius:10px;
-                               font-size:13px; background:#fff; color:#555; outline:none; min-width:150px;"
-                        onchange="this.form.submit()">
-                        <option value="">Sort by</option>
-                        <option value="low" {% if sort == 'low' %}selected{% endif %}>Price: Low to High</option>
-                        <option value="high" {% if sort == 'high' %}selected{% endif %}>Price: High to Low</option>
-                    </select>
-                </form>
-            </div>
+        <select name="sort"
+            style="padding:11px 14px; border:1.5px solid #eee; border-radius:10px;
+                   font-size:13px; background:#fff; color:#555; outline:none; min-width:150px;"
+            onchange="this.form.submit()">
+            <option value="">Sort by</option>
+            <option value="low"  {% if sort == 'low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="high" {% if sort == 'high' %}selected{% endif %}>Price: High to Low</option>
+        </select>
+    </form>
+</div>
 
             <!-- Result Count -->
             <p style="font-size:13px; color:#aaa;" class="mb-3">{{ products|length }} product(s) found</p>

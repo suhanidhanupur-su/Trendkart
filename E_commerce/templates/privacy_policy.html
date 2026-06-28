@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="background:linear-gradient(135deg,#1a0010,#3d0020,#FF4F81);padding:70px 0;text-align:center;">
+    <p style="color:#ffc0d1;font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;">TRENDKART</p>
+    <h1 style="color:#fff;font-size:36px;font-weight:800;margin-bottom:12px;">Privacy Policy</h1>
+    <p style="color:#ffc0d1;font-size:14px;">Last updated: June 2026</p>
+</div>
+<div class="container mt-5 mb-5" style="max-width:800px;">
+    {% for section in sections %}
+    <div style="background:#fff;border-radius:14px;padding:28px;margin-bottom:20px;border:1px solid #f0e0e7;box-shadow:0 2px 10px rgba(255,79,129,0.05);">
+        <h4 style="color:#FF4F81;font-weight:700;margin-bottom:12px;">{{ section.title }}</h4>
+        <p style="color:#666;font-size:14px;line-height:1.8;margin:0;">{{ section.content }}</p>
+    </div>
+    {% endfor %}
+
+    <div style="background:#fff;border-radius:14px;padding:28px;margin-bottom:20px;border:1px solid #f0e0e7;">
+        <h4 style="color:#FF4F81;font-weight:700;margin-bottom:12px;">1. Information We Collect</h4>
+        <p style="color:#666;font-size:14px;line-height:1.8;">We collect information you provide directly to us, such as your name, email address, mobile number, and delivery address when you register or place an order on TrendKart.</p>
+    </div>
+    <div style="background:#fff;border-radius:14px;padding:28px;margin-bottom:20px;border:1px solid #f0e0e7;">
+        <h4 style="color:#FF4F81;font-weight:700;margin-bottom:12px;">2. How We Use Your Information</h4>
+        <p style="color:#666;font-size:14px;line-height:1.8;">We use the information we collect to process your orders, send order confirmations, provide customer support, and improve our services. We do not sell your personal information to third parties.</p>
+    </div>
+    <div style="background:#fff;border-radius:14px;padding:28px;margin-bottom:20px;border:1px solid #f0e0e7;">
+        <h4 style="color:#FF4F81;font-weight:700;margin-bottom:12px;">3. Data Security</h4>
+        <p style="color:#666;font-size:14px;line-height:1.8;">We implement appropriate security measures to protect your personal information. All payment transactions are encrypted using SSL technology.</p>
+    </div>
+    <div style="background:#fff;border-radius:14px;padding:28px;margin-bottom:20px;border:1px solid #f0e0e7;">
+        <h4 style="color:#FF4F81;font-weight:700;margin-bottom:12px;">4. Cookies</h4>
+        <p style="color:#666;font-size:14px;line-height:1.8;">TrendKart uses cookies to enhance your browsing experience. You can choose to disable cookies through your browser settings, but this may affect some features of our website.</p>
+    </div>
+    <div style="background:#fff;border-radius:14px;padding:28px;margin-bottom:20px;border:1px solid #f0e0e7;">
+        <h4 style="color:#FF4F81;font-weight:700;margin-bottom:12px;">5. Contact Us</h4>
+        <p style="color:#666;font-size:14px;line-height:1.8;">If you have any questions about this Privacy Policy, please contact us at <strong style="color:#FF4F81;">suhanidhanupur@gmail.com</strong></p>
+    </div>
+</div>
+{% endblock %}

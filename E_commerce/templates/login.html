@@ -23,23 +23,21 @@
             {% csrf_token %}
 
             <label style="font-size:12px; font-weight:600; color:#FF4F81;">EMAIL</label>
-            <input type="email" name="email"
-                   placeholder="your@email.com"
-                   class="form-control mb-3 mt-1"
-                   style="border:1.5px solid #ffc0d1; background:#FFF5F7;
-                          border-radius:8px; padding:10px 14px;"
-                   required>
+            <input type="email" name="email" placeholder="your@email.com" class="form-control mb-3 mt-1" style="border:1.5px solid #ffc0d1; background:#FFF5F7;
+                          border-radius:8px; padding:10px 14px;" required>
 
             <label style="font-size:12px; font-weight:600; color:#FF4F81;">PASSWORD</label>
-            <input type="password" name="password"
-                   placeholder="Password"
-                   class="form-control mb-4 mt-1"
-                   style="border:1.5px solid #ffc0d1; background:#FFF5F7;
-                          border-radius:8px; padding:10px 14px;"
-                   required>
+            <input type="password" name="password" placeholder="Password" class="form-control mb-4 mt-1" style="border:1.5px solid #ffc0d1; background:#FFF5F7;
+                          border-radius:8px; padding:10px 14px;" required>
 
-            <button type="submit"
-                    style="width:100%; background:#FF4F81; color:#fff; border:none;
+
+            <div class="text-end mb-3">
+                <a href="{% url 'forgot_password' %}"
+                    style="color:#FF4F81;font-size:12px;font-weight:600;text-decoration:none;">
+                    Forgot Password?
+                </a>
+            </div>
+            <button type="submit" style="width:100%; background:#FF4F81; color:#fff; border:none;
                            border-radius:10px; padding:12px; font-size:15px;
                            font-weight:700; cursor:pointer;">
                 Login

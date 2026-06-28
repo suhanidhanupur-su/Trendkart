@@ -90,9 +90,9 @@
                     <span class="fw-bold" style="color:#FF4F81;">₹ {{ total }}</span>
                 </div>
 
-                <a href="#" style="display:block; width:100%; background:#111; color:#fff;
-                          border-radius:10px; padding:12px; text-align:center;
-                          font-weight:700; font-size:15px; text-decoration:none; margin-bottom:10px;">
+                <a href="{% url 'checkout' %}" style="display:block; width:100%; background:#111; color:#fff;
+   border-radius:10px; padding:12px; text-align:center;
+   font-weight:700; font-size:15px; text-decoration:none; margin-bottom:10px;">
                     Proceed to Checkout
                 </a>
 
@@ -120,11 +120,7 @@
     </div>
     {% endif %}
 
-    <!-- Purana -->
-    <a href="#" ...>Proceed to Checkout</a>
 
-    <!-- Naya -->
-    <a href="{% url 'checkout' %}" ...>Proceed to Checkout</a>
 
 </div>
 

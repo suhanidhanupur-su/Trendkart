@@ -3,26 +3,250 @@
 
 {% block content %}
 
-<!-- <img src="{% static 'images/HEADER BANNER.png' %}"
-     class="img-fluid w-100 mb-5"> -->
-
-<!-- <h1 class="text-center">About Us</h1> -->
-<div class="container mt-5 p-5 rounded"
-     style="background-color: #e34a70;">
-
-    <h1 class="text-center mb-4">
-        About TrendKart
-    </h1>
-
-    <p class="text-center">
-        Welcome to TrendKart, your one-stop destination for fashion,
-        electronics, beauty and lifestyle products.
+<!-- Header Banner -->
+<div style="background:linear-gradient(135deg,#1a0010 0%,#3d0020 50%,#FF4F81 100%);
+            padding:80px 0;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:20px;left:60px;width:100px;height:100px;
+                border:1.5px solid rgba(255,255,255,0.1);border-radius:50%;"></div>
+    <div style="position:absolute;bottom:20px;right:80px;width:140px;height:140px;
+                border:1.5px solid rgba(255,255,255,0.1);border-radius:50%;"></div>
+    <div style="position:absolute;top:40px;right:200px;width:60px;height:60px;
+                border:1.5px solid rgba(255,255,255,0.1);border-radius:50%;"></div>
+    <p style="color:#ffc0d1;font-size:12px;font-weight:600;letter-spacing:3px;
+              text-transform:uppercase;margin-bottom:10px;">TRENDKART — OUR STORY</p>
+    <h1 style="color:#fff;font-size:42px;font-weight:800;margin-bottom:14px;">About Us</h1>
+    <p style="color:#ffc0d1;font-size:15px;max-width:520px;margin:0 auto;line-height:1.7;">
+        A perfect blend of fashion, quality, and affordability —
+        bringing the latest trends right to your doorstep.
     </p>
+</div>
 
-    <p class="text-center">
-        Our mission is to provide high-quality products
-        at affordable prices with an amazing shopping experience.
-    </p>
+<div class="container mt-5 mb-5">
+
+    <!-- Brand Tag -->
+    <div class="text-center mb-5">
+        <span style="background:#FFF5F7;color:#FF4F81;border:1.5px solid #ffc0d1;
+                     border-radius:20px;padding:7px 20px;font-size:13px;font-weight:700;">
+            ✨ TrendKart
+        </span>
+    </div>
+
+    <!-- ===== SECTION 1: Mission, Vision, Core Values ===== -->
+    <div class="row g-4 mb-5">
+
+        <!-- Mission -->
+        <div class="col-md-4">
+            <div style="background:#fff;border-radius:16px;padding:28px;height:100%;
+                        border:1px solid #f0e0e7;box-shadow:0 2px 10px rgba(255,79,129,0.05);">
+                <div style="width:52px;height:52px;background:#FFF5F7;border-radius:14px;
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:24px;margin-bottom:14px;border:1px solid #ffc0d1;">
+                    🎯
+                </div>
+                <h4 style="color:#FF4F81;font-weight:800;font-size:18px;margin-bottom:10px;">Our Mission</h4>
+                <p style="color:#666;font-size:13px;line-height:1.8;margin:0;">
+                    To make fashion accessible to everyone by providing high-quality,
+                    affordable products with an exceptional shopping experience.
+                    We believe every person deserves to look and feel their best.
+                </p>
+            </div>
+        </div>
+
+        <!-- Vision -->
+        <div class="col-md-4">
+            <div style="background:#fff;border-radius:16px;padding:28px;height:100%;
+                        border:1px solid #f0e0e7;box-shadow:0 2px 10px rgba(255,79,129,0.05);">
+                <div style="width:52px;height:52px;background:#FFF5F7;border-radius:14px;
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:24px;margin-bottom:14px;border:1px solid #ffc0d1;">
+                    🚀
+                </div>
+                <h4 style="color:#FF4F81;font-weight:800;font-size:18px;margin-bottom:10px;">Our Vision</h4>
+                <p style="color:#666;font-size:13px;line-height:1.8;margin:0;">
+                    To become India's most loved fashion e-commerce platform —
+                    where style meets affordability, and every customer feels valued.
+                    We envision TrendKart as the first choice for fashion lovers.
+                </p>
+            </div>
+        </div>
+
+        <!-- Core Values -->
+        <div class="col-md-4">
+            <div style="background:#fff;border-radius:16px;padding:28px;height:100%;
+                        border:1px solid #f0e0e7;box-shadow:0 2px 10px rgba(255,79,129,0.05);">
+                <div style="width:52px;height:52px;background:#FFF5F7;border-radius:14px;
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:24px;margin-bottom:14px;border:1px solid #ffc0d1;">
+                    💎
+                </div>
+                <h4 style="color:#FF4F81;font-weight:800;font-size:18px;margin-bottom:10px;">Core Values</h4>
+                <div style="font-size:13px;color:#666;line-height:2;">
+                    <p style="margin-bottom:4px;"><span style="color:#FF4F81;font-weight:700;">•</span> Quality First</p>
+                    <p style="margin-bottom:4px;"><span style="color:#FF4F81;font-weight:700;">•</span> Customer Satisfaction</p>
+                    <p style="margin-bottom:4px;"><span style="color:#FF4F81;font-weight:700;">•</span> Integrity & Trust</p>
+                    <p style="margin-bottom:4px;"><span style="color:#FF4F81;font-weight:700;">•</span> Innovation</p>
+                    <p style="margin-bottom:0;"><span style="color:#FF4F81;font-weight:700;">•</span> Affordability</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 16px;text-align:center;border:1px solid #f0e0e7;">
+                <div style="font-size:22px;margin-bottom:6px;">😊</div>
+                <div style="font-size:26px;font-weight:800;color:#FF4F81;margin-bottom:4px;">10K+</div>
+                <div style="font-size:12px;color:#888;font-weight:600;">Happy Customers</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 16px;text-align:center;border:1px solid #f0e0e7;">
+                <div style="font-size:22px;margin-bottom:6px;">📦</div>
+                <div style="font-size:26px;font-weight:800;color:#FF4F81;margin-bottom:4px;">25K+</div>
+                <div style="font-size:12px;color:#888;font-weight:600;">Orders Delivered</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 16px;text-align:center;border:1px solid #f0e0e7;">
+                <div style="font-size:22px;margin-bottom:6px;">🏷️</div>
+                <div style="font-size:26px;font-weight:800;color:#FF4F81;margin-bottom:4px;">500+</div>
+                <div style="font-size:12px;color:#888;font-weight:600;">Products</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 16px;text-align:center;border:1px solid #f0e0e7;">
+                <div style="font-size:22px;margin-bottom:6px;">⭐</div>
+                <div style="font-size:26px;font-weight:800;color:#FF4F81;margin-bottom:4px;">4.8</div>
+                <div style="font-size:12px;color:#888;font-weight:600;">Average Rating</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SECTION 2: Why Choose Us ===== -->
+    <h2 class="text-center fw-bold mb-2" style="color:#222;">Why Choose TrendKart?</h2>
+    <p class="text-center mb-4" style="color:#aaa;font-size:13px;">What makes us different from the rest</p>
+
+    <div class="row g-3 mb-5">
+        <div class="col-md-4 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 18px;border:1px solid #f0e0e7;transition:all 0.2s;"
+                 onmouseover="this.style.borderColor='#FF4F81';this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 18px rgba(255,79,129,0.1)'"
+                 onmouseout="this.style.borderColor='#f0e0e7';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="font-size:30px;margin-bottom:10px;">💎</div>
+                <div style="font-size:14px;font-weight:700;color:#222;margin-bottom:6px;">Authentic Quality</div>
+                <div style="font-size:12px;color:#888;line-height:1.6;">Every product goes through strict quality checks before reaching you.</div>
+            </div>
+        </div>
+        <div class="col-md-4 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 18px;border:1px solid #f0e0e7;transition:all 0.2s;"
+                 onmouseover="this.style.borderColor='#FF4F81';this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 18px rgba(255,79,129,0.1)'"
+                 onmouseout="this.style.borderColor='#f0e0e7';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="font-size:30px;margin-bottom:10px;">💰</div>
+                <div style="font-size:14px;font-weight:700;color:#222;margin-bottom:6px;">Best Prices</div>
+                <div style="font-size:12px;color:#888;line-height:1.6;">Get the best products at prices that won't break the bank.</div>
+            </div>
+        </div>
+        <div class="col-md-4 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 18px;border:1px solid #f0e0e7;transition:all 0.2s;"
+                 onmouseover="this.style.borderColor='#FF4F81';this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 18px rgba(255,79,129,0.1)'"
+                 onmouseout="this.style.borderColor='#f0e0e7';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="font-size:30px;margin-bottom:10px;">🚚</div>
+                <div style="font-size:14px;font-weight:700;color:#222;margin-bottom:6px;">Fast Delivery</div>
+                <div style="font-size:12px;color:#888;line-height:1.6;">Free delivery on orders above ₹999. Quick and reliable shipping.</div>
+            </div>
+        </div>
+        <div class="col-md-4 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 18px;border:1px solid #f0e0e7;transition:all 0.2s;"
+                 onmouseover="this.style.borderColor='#FF4F81';this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 18px rgba(255,79,129,0.1)'"
+                 onmouseout="this.style.borderColor='#f0e0e7';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="font-size:30px;margin-bottom:10px;">🔄</div>
+                <div style="font-size:14px;font-weight:700;color:#222;margin-bottom:6px;">Easy Returns</div>
+                <div style="font-size:12px;color:#888;line-height:1.6;">Hassle-free 7-day return policy. No questions asked.</div>
+            </div>
+        </div>
+        <div class="col-md-4 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 18px;border:1px solid #f0e0e7;transition:all 0.2s;"
+                 onmouseover="this.style.borderColor='#FF4F81';this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 18px rgba(255,79,129,0.1)'"
+                 onmouseout="this.style.borderColor='#f0e0e7';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="font-size:30px;margin-bottom:10px;">💳</div>
+                <div style="font-size:14px;font-weight:700;color:#222;margin-bottom:6px;">Secure Payment</div>
+                <div style="font-size:12px;color:#888;line-height:1.6;">100% safe & encrypted payment gateway for your security.</div>
+            </div>
+        </div>
+        <div class="col-md-4 col-6">
+            <div style="background:#fff;border-radius:14px;padding:24px 18px;border:1px solid #f0e0e7;transition:all 0.2s;"
+                 onmouseover="this.style.borderColor='#FF4F81';this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 18px rgba(255,79,129,0.1)'"
+                 onmouseout="this.style.borderColor='#f0e0e7';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="font-size:30px;margin-bottom:10px;">🎯</div>
+                <div style="font-size:14px;font-weight:700;color:#222;margin-bottom:6px;">Customer First</div>
+                <div style="font-size:12px;color:#888;line-height:1.6;">Your satisfaction is our top priority. We're always here to help.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SECTION 3: Our Team (Dynamic) ===== -->
+    {% if team_members %}
+    <h2 class="text-center fw-bold mb-2" style="color:#222;">Meet Our Team</h2>
+    <p class="text-center mb-4" style="color:#aaa;font-size:13px;">The people behind TrendKart</p>
+
+    <div class="row g-3 mb-5">
+        {% for member in team_members %}
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:16px;padding:24px 16px;
+                        text-align:center;border:1px solid #f0e0e7;
+                        box-shadow:0 2px 10px rgba(255,79,129,0.05);">
+
+                <!-- Employee Image -->
+                {% if member.employee_image %}
+                <img src="{{ member.employee_image.url }}"
+                     style="width:80px;height:80px;border-radius:50%;object-fit:cover;
+                            border:3px solid #FF4F81;margin-bottom:12px;">
+                {% else %}
+                <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#FF4F81,#ff85a1);
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:32px;color:#fff;margin:0 auto 12px;border:3px solid #FF4F81;">
+                    {{ member.employee_name|first|upper }}
+                </div>
+                {% endif %}
+
+                <h6 style="font-weight:800;color:#222;margin-bottom:4px;font-size:14px;">
+                    {{ member.employee_name }}
+                </h6>
+                <p style="color:#FF4F81;font-size:12px;font-weight:600;margin-bottom:8px;">
+                    {{ member.role }}
+                </p>
+                <p style="color:#888;font-size:12px;line-height:1.6;margin:0;">
+                    {{ member.description|truncatewords:15 }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- CTA -->
+    <div style="background:linear-gradient(90deg,#111,#3d0020);border-radius:18px;
+                padding:44px;text-align:center;">
+        <h2 style="color:#fff;font-size:26px;font-weight:800;margin-bottom:10px;">
+            🛍️ Start Shopping Today!
+        </h2>
+        <p style="color:#ffc0d1;font-size:14px;margin-bottom:24px;">
+            Thousands of products waiting for you. Find your perfect style!
+        </p>
+        <a href="{% url 'product' %}"
+           style="background:#FF4F81;color:#fff;border:none;border-radius:12px;
+                  padding:14px 36px;font-size:15px;font-weight:700;
+                  text-decoration:none;display:inline-block;margin-right:12px;">
+            Shop Now →
+        </a>
+        <a href="{% url 'register' %}"
+           style="background:transparent;color:#fff;border:1.5px solid #FF4F81;
+                  border-radius:12px;padding:13px 28px;font-size:15px;font-weight:700;
+                  text-decoration:none;display:inline-block;">
+            Join TrendKart
+        </a>
+    </div>
 
 </div>
 

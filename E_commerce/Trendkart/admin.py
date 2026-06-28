@@ -64,15 +64,19 @@ admin.site.register(Product)
 
 
 
+from .models import CustomUser, Category, Product, Cart, Wishlist, OTP, Order, OrderItem, TeamMember, Gallery
 
-class OrderItemInline(admin.TabularInline):
-    model = OrderItem
-    extra = 0
+admin.site.register(TeamMember)
+admin.site.register(Gallery)
 
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'full_name', 'total_amount', 'status', 'payment_method', 'created_at')
-    list_filter = ('status', 'payment_method')
-    inlines = [OrderItemInline]
 
-admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderItem)
+
+
+from .models import Contact
+
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'mobile', 'subject', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('name', 'email', 'subject')
+
+admin.site.register(Contact, ContactAdmin)

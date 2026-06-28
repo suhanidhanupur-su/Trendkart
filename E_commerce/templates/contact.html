@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="container mt-5">
+    <div style="background:#fff; border-radius:18px; padding:40px;
+                border:1px solid #f0e0e7; text-align:center;
+                box-shadow:0 2px 12px rgba(255,79,129,0.07); margin-bottom:32px;">
+
+        <!-- Icon -->
+        <div style="width:64px;height:64px;background:#FFF5F7;border-radius:16px;
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:28px;margin:0 auto 16px;border:1px solid #ffc0d1;">
+            💬
+        </div>
+
+        <h2 style="color:#FF4F81;font-weight:800;font-size:22px;margin-bottom:8px;">
+            We'd Love to Hear From You
+        </h2>
+        <p style="color:#888;font-size:14px;max-width:480px;margin:0 auto;line-height:1.7;">
+            Reach out for product queries, order updates, or anything else.
+            Our team typically responds within 24 hours.
+        </p>
+    </div>
+</div>
+
+<!-- Messages -->
+{% if messages %}
+<div class="container">
+    {% for message in messages %}
+    <div class="alert {% if 'successfully' in message.tags %}alert-success{% else %}alert-danger{% endif %} text-center mb-3"
+         style="border-radius:10px;font-size:14px;font-weight:600;">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container mb-5">
+    <div class="row g-4">
+
+        <!-- LEFT: Contact Form -->
+        <div class="col-md-7">
+            <div style="background:#fff;border-radius:16px;padding:30px;
+                        border:1px solid #f0e0e7;
+                        box-shadow:0 2px 12px rgba(255,79,129,0.07);">
+
+                <p style="font-size:11px;font-weight:700;color:#FF4F81;
+                          text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
+                    ✉️ SEND A MESSAGE
+                </p>
+                <h3 style="color:#222;font-weight:800;font-size:20px;margin-bottom:24px;">
+                    Let's start a conversation
+                </h3>
+
+                <form method="POST" action="{% url 'contact' %}">
+                    {% csrf_token %}
+
+                    <!-- Name + Email Row -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label style="font-size:11px;font-weight:700;color:#aaa;
+                                          text-transform:uppercase;letter-spacing:1px;">
+                                YOUR NAME
+                            </label>
+                            <input type="text" name="name"
+                                   placeholder="your name"
+                                   class="form-control mt-1"
+                                   style="border:1.5px solid #eee;background:#fff;
+                                          border-radius:8px;padding:10px 14px;font-size:14px;"
+                                   required>
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px;font-weight:700;color:#aaa;
+                                          text-transform:uppercase;letter-spacing:1px;">
+                                EMAIL
+                            </label>
+                            <input type="email" name="email"
+                                   placeholder="you@example.com"
+                                   class="form-control mt-1"
+                                   style="border:1.5px solid #eee;background:#fff;
+                                          border-radius:8px;padding:10px 14px;font-size:14px;"
+                                   required>
+                        </div>
+                    </div>
+
+                    <!-- Mobile + Subject -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label style="font-size:11px;font-weight:700;color:#aaa;
+                                          text-transform:uppercase;letter-spacing:1px;">
+                                MOBILE
+                            </label>
+                            <input type="text" name="mobile"
+                                   placeholder="+91 XXXXX XXXXX"
+                                   class="form-control mt-1"
+                                   style="border:1.5px solid #eee;background:#fff;
+                                          border-radius:8px;padding:10px 14px;font-size:14px;">
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px;font-weight:700;color:#aaa;
+                                          text-transform:uppercase;letter-spacing:1px;">
+                                SUBJECT
+                            </label>
+                            <select name="subject" class="form-select mt-1"
+                                    style="border:1.5px solid #eee;background:#fff;
+                                           border-radius:8px;padding:10px 14px;font-size:14px;">
+                                <option value="">Select subject</option>
+                                <option>Order Issue</option>
+                                <option>Return & Refund</option>
+                                <option>Product Query</option>
+                                <option>Payment Issue</option>
+                                <option>Delivery Issue</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="mb-3">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <label style="font-size:11px;font-weight:700;color:#aaa;
+                                          text-transform:uppercase;letter-spacing:1px;">
+                                MESSAGE
+                            </label>
+                            <span style="font-size:11px;color:#ccc;" id="charCount">0/500</span>
+                        </div>
+                        <textarea name="message" rows="5" id="messageArea"
+                                  placeholder="Tell us about your inquiry, product you're looking for, or any questions you have..."
+                                  class="form-control mt-1"
+                                  style="border:1.5px solid #eee;background:#fff;
+                                         border-radius:8px;padding:10px 14px;
+                                         font-size:14px;resize:none;"
+                                  maxlength="500" required
+                                  oninput="document.getElementById('charCount').textContent=this.value.length+'/500'">
+                        </textarea>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit"
+                            style="width:100%;background:#FF4F81;color:#fff;border:none;
+                                   border-radius:10px;padding:13px;font-size:14px;
+                                   font-weight:700;cursor:pointer;display:flex;
+                                   align-items:center;justify-content:center;gap:8px;">
+                        ✉️ Send Message
+                    </button>
+
+                    <!-- Trust Badges -->
+                    <div style="display:flex;justify-content:center;gap:20px;margin-top:14px;">
+                        <span style="font-size:12px;color:#aaa;">🔒 Private</span>
+                        <span style="font-size:12px;color:#aaa;">⚡ Fast reply</span>
+                        <span style="font-size:12px;color:#aaa;">😊 Friendly</span>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- RIGHT: Map + Info -->
+        <div class="col-md-5">
+
+            <!-- Google Map -->
+            <div style="border-radius:14px;overflow:hidden;border:1px solid #f0e0e7;
+                        box-shadow:0 2px 12px rgba(255,79,129,0.07);margin-bottom:16px;">
+                <iframe
+                    src="https://maps.google.com/maps?q=india&t=&z=5&ie=UTF8&iwloc=&output=embed"
+                    width="100%" height="200"
+                    style="border:none;display:block;">
+                </iframe>
+            </div>
+
+            <!-- Rating Card -->
+            <div style="background:#fff;border-radius:14px;padding:16px 18px;
+                        border:1px solid #f0e0e7;margin-bottom:16px;
+                        display:flex;align-items:center;gap:14px;">
+                <div style="font-size:28px;">⭐</div>
+                <div>
+                    <div style="display:flex;gap:2px;margin-bottom:3px;">
+                        <span style="color:#FF4F81;font-size:14px;">★★★★★</span>
+                    </div>
+                    <p style="font-size:13px;font-weight:700;color:#222;margin:0;">
+                        4.9 / 5 — Highly Rated
+                    </p>
+                    <p style="font-size:11px;color:#aaa;margin:0;">
+                        Based on 200+ customer reviews
+                    </p>
+                </div>
+            </div>
+
+            <!-- WhatsApp Card -->
+            <div style="background:#fff;border-radius:14px;padding:16px 18px;
+                        border:1px solid #f0e0e7;margin-bottom:16px;">
+                <p style="font-size:11px;font-weight:700;color:#aaa;
+                          text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">
+                    QUICK CONNECT
+                </p>
+                <p style="font-size:13px;color:#555;margin-bottom:12px;">
+                    Prefer to chat? Reach us on WhatsApp for faster, personalized responses.
+                </p>
+                <a href="https://wa.me/919876543210"
+                   target="_blank"
+                   style="display:flex;align-items:center;justify-content:center;gap:8px;
+                          background:#25D366;color:#fff;border-radius:10px;
+                          padding:10px;font-size:13px;font-weight:700;text-decoration:none;">
+                    <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bottom: Contact Details -->
+    <div class="row g-3 mt-2">
+
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:14px;padding:20px 16px;
+                        border:1px solid #f0e0e7;
+                        box-shadow:0 2px 8px rgba(255,79,129,0.05);">
+                <div style="font-size:20px;color:#FF4F81;margin-bottom:8px;">📍</div>
+                <p style="font-size:11px;font-weight:700;color:#aaa;
+                          text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">
+                    VISIT US
+                </p>
+                <p style="font-size:12px;font-weight:600;color:#222;margin:0;line-height:1.6;">
+                    India
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:14px;padding:20px 16px;
+                        border:1px solid #f0e0e7;
+                        box-shadow:0 2px 8px rgba(255,79,129,0.05);">
+                <div style="font-size:20px;color:#FF4F81;margin-bottom:8px;">📱</div>
+                <p style="font-size:11px;font-weight:700;color:#aaa;
+                          text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">
+                    CALL US
+                </p>
+                <p style="font-size:12px;font-weight:600;color:#222;margin:0;">
+                    +91 0000000000
+                </p>
+                <p style="font-size:11px;color:#aaa;margin:0;">
+                    All Days: 9:00 AM - 6:00 PM
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:14px;padding:20px 16px;
+                        border:1px solid #f0e0e7;
+                        box-shadow:0 2px 8px rgba(255,79,129,0.05);">
+                <div style="font-size:20px;color:#FF4F81;margin-bottom:8px;">📧</div>
+                <p style="font-size:11px;font-weight:700;color:#aaa;
+                          text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">
+                    EMAIL US
+                </p>
+                <p style="font-size:12px;font-weight:600;color:#222;margin:0;">
+                    suhanidhanupur@gmail.com
+                </p>
+                <p style="font-size:11px;color:#aaa;margin:0;">
+                    Reply within 24 hours
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div style="background:#fff;border-radius:14px;padding:20px 16px;
+                        border:1px solid #f0e0e7;
+                        box-shadow:0 2px 8px rgba(255,79,129,0.05);">
+                <div style="font-size:20px;color:#FF4F81;margin-bottom:8px;">🕐</div>
+                <p style="font-size:11px;font-weight:700;color:#aaa;
+                          text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">
+                    STORE HOURS
+                </p>
+                <p style="font-size:12px;font-weight:600;color:#222;margin:0;">
+                    Mon - Sat: 9AM - 6PM
+                </p>
+                <p style="font-size:11px;color:#aaa;margin:0;">
+                    Sunday: Closed
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -136,3 +136,72 @@ class OrderItem(models.Model):
     def subtotal(self):
         return self.price * self.quantity
     
+
+
+
+class TeamMember(models.Model):
+    employee_image = models.ImageField(upload_to='team/', null=True, blank=True)
+    employee_name = models.CharField(max_length=255)
+    role = models.CharField(max_length=255)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.employee_name
+
+
+class Gallery(models.Model):
+    image = models.ImageField(upload_to='gallery/')
+    title = models.CharField(max_length=255, null=True, blank=True)
+    caption = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.title or "Gallery Image"
+    
+
+
+# --------------------contact us-------------------------------
+class Contact(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    mobile = models.CharField(max_length=15)
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.subject}"    
+
+# ------------------------orderitem------------------
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name='items'
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+
+    quantity = models.PositiveIntegerField(default=1)
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+# -------------------------------status-------------------
+STATUS_CHOICES = (
+    ('Pending', 'Pending'),
+    ('Confirmed', 'Confirmed'),
+    ('Shipped', 'Shipped'),
+    ('Delivered', 'Delivered'),
+    ('Cancelled', 'Cancelled'),
+)
+
+status = models.CharField(
+    max_length=20,
+    choices=STATUS_CHOICES,
+    default='Pending'
+)

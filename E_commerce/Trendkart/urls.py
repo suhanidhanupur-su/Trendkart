@@ -41,5 +41,12 @@ urlpatterns = [
 
      path('checkout/', checkout, name='checkout'),
      path('order-confirm/<int:pk>/', order_confirm, name='order_confirm'),
-    path('my-orders/', my_orders, name='my_orders'),
+     path('my-orders/', my_orders, name='my_orders'),
+
+     path('forgot-password/', forgot_password, name='forgot_password'),
+     path('reset-password-otp/', reset_password_otp, name='reset_password_otp'),
+     path('reset-password-new/', reset_password_new, name='reset_password_new'),
+     path('contact/', contact, name='contact'),
+     path(
+    'cancel-order/<int:pk>/',views.cancel_order,name='cancel_order'),
 ]

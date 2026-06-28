@@ -3,52 +3,160 @@
 
 {% block content %}
 
-<!-- Banner -->
-<img src="{% static 'images/header-banner.png' %}"
-     class="img-fluid w-100 mb-5">
-
-
-<div class="container py-5">
-
-    <h1 class="text-center fw-bold mb-5 text-dark">
-        Shop By Categories
+<!-- Header Banner -->
+<div style="background:linear-gradient(135deg,#1a0010,#3d0020,#FF4F81);
+            padding:60px 0;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-30px;left:-30px;width:160px;height:160px;
+                border:2px solid rgba(255,255,255,0.07);border-radius:50%;"></div>
+    <div style="position:absolute;bottom:-40px;right:-20px;width:200px;height:200px;
+                border:2px solid rgba(255,255,255,0.07);border-radius:50%;"></div>
+    <p style="color:#ffc0d1;font-size:11px;letter-spacing:3px;
+              text-transform:uppercase;margin-bottom:8px;">TRENDKART</p>
+    <h1 style="color:#fff;font-size:36px;font-weight:800;margin-bottom:10px;">
+        Shop By Category
     </h1>
+    <p style="color:#ffc0d1;font-size:13px;">
+        Find exactly what you're looking for
+    </p>
+</div>
 
-    <div class="row">
+<div class="container mt-4 mb-5">
+
+    <!-- Search Bar -->
+    <div style="max-width:420px;margin:0 auto 32px;position:relative;">
+        <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);
+                     color:#FF4F81;font-size:18px;">🔍</span>
+        <input type="text" id="catSearch"
+               placeholder="Search categories..."
+               oninput="filterCategories(this.value)"
+               style="width:100%;padding:13px 20px 13px 44px;
+                      border:1.5px solid #ffc0d1;border-radius:30px;
+                      font-size:14px;background:#fff;outline:none;">
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-4">
+            <div style="background:#fff;border-radius:14px;padding:18px;
+                        text-align:center;border:1px solid #f0e0e7;">
+                <div style="font-size:22px;font-weight:800;color:#FF4F81;margin-bottom:4px;">
+                    {{ categories|length }}+
+                </div>
+                <div style="font-size:12px;color:#888;">Categories</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div style="background:#fff;border-radius:14px;padding:18px;
+                        text-align:center;border:1px solid #f0e0e7;">
+                <div style="font-size:22px;font-weight:800;color:#FF4F81;margin-bottom:4px;">
+                    500+
+                </div>
+                <div style="font-size:12px;color:#888;">Products</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div style="background:#fff;border-radius:14px;padding:18px;
+                        text-align:center;border:1px solid #f0e0e7;">
+                <div style="font-size:22px;font-weight:800;color:#FF4F81;margin-bottom:4px;">
+                    50+
+                </div>
+                <div style="font-size:12px;color:#888;">Brands</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Title -->
+    <h2 class="fw-bold mb-1" style="color:#222;font-size:20px;">All Categories</h2>
+    <p style="color:#aaa;font-size:13px;margin-bottom:20px;">
+        Tap any category to explore products
+    </p>
+
+    <!-- Categories Grid -->
+    <div class="row g-3" id="categoriesGrid">
 
         {% for category in categories %}
-        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+        <div class="col-md-4 col-6 cat-item"
+             data-name="{{ category.category_name|lower }}">
 
-            <div class="card h-100 shadow border-0 rounded-4">
+            <div style="background:#fff;border-radius:18px;overflow:hidden;
+                        border:1px solid #f0e0e7;position:relative;
+                        transition:all 0.22s;cursor:pointer;"
+                 onmouseover="this.style.transform='translateY(-5px)';
+                              this.style.boxShadow='0 10px 28px rgba(255,79,129,0.15)';
+                              this.style.borderColor='#FF4F81';
+                              this.querySelector('.explore-btn').style.background='#FF4F81'"
+                 onmouseout="this.style.transform='translateY(0)';
+                             this.style.boxShadow='none';
+                             this.style.borderColor='#f0e0e7';
+                             this.querySelector('.explore-btn').style.background='#111'">
 
+                <!-- Category Image -->
                 {% if category.category_image %}
-                    <img src="{{ category.category_image.url }}"
-                         class="card-img-top"
-                         style="height:250px; object-fit:cover;"
-                         alt="{{ category.category_name }}">
+                <img src="{{ category.category_image.url }}"
+                     style="width:100%;height:170px;object-fit:cover;">
+                {% else %}
+                <div style="width:100%;height:170px;background:linear-gradient(135deg,#FFF5F7,#ffc0d1);
+                            display:flex;align-items:center;justify-content:center;font-size:56px;">
+                    🏷️
+                </div>
                 {% endif %}
 
-                <div class="card-body text-center">
-                    <h5 class="card-title fw-bold">
+                <!-- Card Body -->
+                <div style="padding:16px 18px 18px;">
+                    <h5 style="font-size:15px;font-weight:800;color:#222;margin-bottom:4px;">
                         {{ category.category_name }}
                     </h5>
-
-                    <a href="#"
-                       class="btn btn-dark rounded-pill px-4">
-                        Explore
+                    <p style="font-size:12px;color:#aaa;margin-bottom:12px;">
+                        {{ category.products.count }} Products
+                    </p>
+                    <a href="{% url 'product' %}?category={{ category.id }}"
+                       class="explore-btn"
+                       style="display:inline-block;background:#111;color:#fff;
+                              border-radius:8px;padding:7px 18px;font-size:12px;
+                              font-weight:700;text-decoration:none;
+                              transition:background 0.18s;">
+                        Explore →
                     </a>
                 </div>
 
             </div>
-
         </div>
 
         {% empty %}
-        <p class="text-center">No categories found.</p>
+        <div class="col-12 text-center py-5">
+            <div style="font-size:56px;margin-bottom:16px;">🏷️</div>
+            <h4 style="color:#222;font-weight:800;">No Categories Found</h4>
+            <p style="color:#aaa;">Admin panel se categories add karo</p>
+        </div>
         {% endfor %}
 
     </div>
 
+    <!-- No Result Message -->
+    <div id="noResult" style="display:none;text-align:center;padding:40px 0;">
+        <div style="font-size:48px;margin-bottom:12px;">🔍</div>
+        <h5 style="color:#222;font-weight:800;">No category found!</h5>
+        <p style="color:#aaa;">Try a different search</p>
+    </div>
+
 </div>
+
+<script>
+function filterCategories(query) {
+    const items = document.querySelectorAll('.cat-item');
+    let count = 0;
+    query = query.toLowerCase();
+    items.forEach(item => {
+        const name = item.dataset.name;
+        if (name.includes(query)) {
+            item.style.display = '';
+            count++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    document.getElementById('noResult').style.display = count === 0 ? 'block' : 'none';
+}
+</script>
 
 {% endblock %}
