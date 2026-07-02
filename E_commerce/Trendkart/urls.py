@@ -47,6 +47,5 @@ urlpatterns = [
      path('reset-password-otp/', reset_password_otp, name='reset_password_otp'),
      path('reset-password-new/', reset_password_new, name='reset_password_new'),
      path('contact/', contact, name='contact'),
-     path(
-    'cancel-order/<int:pk>/',views.cancel_order,name='cancel_order'),
+     path('cancel-order/<int:pk>/',views.cancel_order,name='cancel_order'),
 ]

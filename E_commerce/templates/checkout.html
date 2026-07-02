@@ -21,8 +21,13 @@
                     📦 Delivery Details
                 </h5>
 
-                <form method="POST">
+                <form method="POST" onsubmit="return handlePayment(event)">
                     {% csrf_token %}
+                    
+                    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+                    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+                    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+
                     <div class="row g-3">
 
                         <div class="col-md-6">
@@ -151,13 +156,67 @@
     </div>
 </div>
 
+<!-- Razorpay Script SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
 function selectPayment(type) {
-    document.getElementById('cod-label').style.border = type === 'COD' ? '1.5px solid #FF4F81' : '1.5px solid #eee';
-    document.getElementById('online-label').style.border = type === 'Online' ? '1.5px solid #FF4F81' : '1.5px solid #eee';
-    document.getElementById('cod-label').style.background = type === 'COD' ? '#FFF5F7' : '#fff';
-    document.getElementById('online-label').style.background = type === 'Online' ? '#FFF5F7' : '#fff';
+    const isCod = type === 'COD';
+    document.getElementById('cod-label').style.border = isCod ? '1.5px solid #FF4F81' : '1.5px solid #eee';
+    document.getElementById('online-label').style.border = !isCod ? '1.5px solid #FF4F81' : '1.5px solid #eee';
+    document.getElementById('cod-label').style.background = isCod ? '#FFF5F7' : '#fff';
+    document.getElementById('online-label').style.background = !isCod ? '#FFF5F7' : '#fff';
 }
+
+function handlePayment(e) {
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+    if (paymentMethod === 'COD') {
+        return true; 
+    } else {
+        e.preventDefault();
+
+        const orderId = "{{ razorpay_order_id }}";
+        if (!orderId || orderId === "None" || orderId === "") {
+            alert("Backend error: Razorpay Order ID generate nahi ho saki. Please check views.py!");
+            return false;
+        }
+
+        const options = {
+            key: "{{ razorpay_key }}",
+            // FIX: Yahan se amount line ko hata diya gaya hai kyunki order_id backend se sahi amount khud handle kar legi.
+            currency: "INR",
+            name: "TrendKart",
+            description: "Order Payment",
+            order_id: orderId,
+            handler: function(response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                
+                e.target.submit();
+            },
+            prefill: {
+                name: "{{ user.full_name }}",
+                email: "{{ user.email }}",
+                contact: "{{ user.mobile_no }}"
+            },
+            theme: {
+                color: "#FF4F81"
+            },
+            modal: {
+                ondismiss: function() {
+                    alert('Payment cancelled. Try again!');
+                }
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+        return false;
+    }
+}
+
 selectPayment('COD');
 </script>
 
