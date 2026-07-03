@@ -184,11 +184,19 @@ function handlePayment(e) {
 
         const options = {
             key: "{{ razorpay_key }}",
-            // FIX: Yahan se amount line ko hata diya gaya hai kyunki order_id backend se sahi amount khud handle kar legi.
+            amount: "{{ razorpay_amount }}",
             currency: "INR",
             name: "TrendKart",
             description: "Order Payment",
             order_id: orderId,
+            
+            // ✅ Methods explicitly defined as per request
+            method: {
+                upi: true,
+                card: true,
+                netbanking: true,
+                wallet: true,
+            },
             handler: function(response) {
                 document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
                 document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
@@ -202,7 +210,7 @@ function handlePayment(e) {
                 contact: "{{ user.mobile_no }}"
             },
             theme: {
-                color: "#FF4F81"
+                color: "#C9607A"
             },
             modal: {
                 ondismiss: function() {

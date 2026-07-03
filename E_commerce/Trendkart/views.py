@@ -1,5 +1,7 @@
 import uuid
 import random
+import razorpay
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -9,7 +11,7 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from .models import (
     CustomUser, Category, Product, Cart, Wishlist, 
-    OTP, Order, OrderItem, TeamMember, Gallery
+    OTP, Order, OrderItem, TeamMember, Gallery, Contact
 )
 
 # ==================== HOME ====================
@@ -442,53 +444,111 @@ def wishlist_view(request):
     return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
 
 
-# ==================== CHECKOUT & ORDERING ====================
+# ==================== CHECKOUT & ORDERING (WITH RAZORPAY) ====================
 @login_required(login_url='login')
 def checkout(request):
     """Processes user details and compiles structured invoices to secure active shopping orders."""
     cart_items = Cart.objects.filter(user=request.user)
 
     if not cart_items:
-        messages.error(request, 'Your cart is empty!')
+        messages.error(request, 'Cart khali hai!')
         return redirect('cart')
 
     total = sum(item.total_price() for item in cart_items)
+    razorpay_order_id = ""
+
+    # Razorpay client initialize karo
+    client = razorpay.Client(
+        auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET)
+    )
 
     if request.method == 'POST':
-        full_name = request.POST.get('full_name')
-        mobile = request.POST.get('mobile')
-        address = request.POST.get('address')
-        city = request.POST.get('city')
-        pincode = request.POST.get('pincode')
         payment_method = request.POST.get('payment_method')
+        payment_verified = False  # Default false rakhein
 
-        order = Order.objects.create(
-            user=request.user,
-            full_name=full_name,
-            mobile=mobile,
-            address=address,
-            city=city,
-            pincode=pincode,
-            payment_method=payment_method,
-            total_amount=total,
-        )
+        if payment_method == 'Online':
+            # Razorpay payment fields fetch karo
+            payment_id = request.POST.get('razorpay_payment_id')
+            order_id = request.POST.get('razorpay_order_id')
+            signature = request.POST.get('razorpay_signature')
 
-        for item in cart_items:
-            OrderItem.objects.create(
-                order=order,
-                product=item.product,
-                quantity=item.quantity,
-                price=item.product.product_price,
+            # Agar popup cancel kiya gaya hai toh pehle hi rok do
+            if not payment_id or not order_id or not signature:
+                messages.error(request, 'Payment incomplete ya cancel ho gayi thi!')
+                return redirect('checkout')
+
+            # ✅ UPDATED: Complete requested try/except validation block
+            try:
+                params = {
+                    'razorpay_order_id': order_id,
+                    'razorpay_payment_id': payment_id,
+                    'razorpay_signature': signature
+                }
+                client.utility.verify_payment_signature(params)
+                payment_verified = True
+            except razorpay.errors.SignatureVerificationError:
+                messages.error(request, 'Payment verification failed!')
+                return redirect('checkout')
+            except Exception as e:
+                print(f"Payment error: {e}")  # Terminal mein error dekho
+                messages.error(request, f'Payment error: {str(e)}')
+                return redirect('checkout')
+        else:
+            # COD ke liye direct true
+            payment_verified = True
+
+        if payment_verified:
+            full_name = request.POST.get('full_name')
+            mobile = request.POST.get('mobile')
+            address = request.POST.get('address')
+            city = request.POST.get('city')
+            pincode = request.POST.get('pincode')
+
+            # Order save karo
+            order = Order.objects.create(
+                user=request.user,
+                full_name=full_name,
+                mobile=mobile,
+                address=address,
+                city=city,
+                pincode=pincode,
+                payment_method=payment_method,
+                total_amount=total,
             )
 
-        cart_items.delete()
-        messages.success(request, 'Order placed successfully!')
-        return redirect('order_confirm', pk=order.id)
+            # Order items save karo
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.product.product_price,
+                )
 
+            # Cart saaf karo
+            cart_items.delete()
+            messages.success(request, 'Order placed successfully!')
+            return redirect('order_confirm', pk=order.id)
+
+    else:
+        # Razorpay Order ID create karein GET request par
+        try:
+            razorpay_order = client.order.create({
+                'amount': int(total * 100),
+                'currency': 'INR',
+                'payment_capture': 1
+            })
+            razorpay_order_id = razorpay_order['id']
+        except Exception as e:
+            messages.error(request, 'Razorpay configuration error!')
+            
     return render(request, 'checkout.html', {
         'cart_items': cart_items,
         'total': total,
         'user': request.user,
+        'razorpay_key': settings.RAZORPAY_API_KEY,
+        'razorpay_order_id': razorpay_order_id,
+        'razorpay_amount': int(total * 100),
     })
 
 
@@ -566,10 +626,8 @@ def mission(request):
 def vision(request):
     return render(request, 'vision.html')
 
-# -------------------contact view------------------------------
 
-from .models import Contact
-
+# ------------------- CONTACT VIEW ------------------------------
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -582,7 +640,6 @@ def contact(request):
             messages.error(request, 'Please fill all required fields!')
             return redirect('contact')
 
-        # Database mein save karo
         Contact.objects.create(
             name=name,
             email=email,
@@ -591,7 +648,6 @@ def contact(request):
             message=message,
         )
 
-        # Email bhi bhejo (optional)
         send_mail(
             subject=f'TrendKart Contact: {subject}',
             message=f'Name: {name}\nEmail: {email}\nMobile: {mobile}\n\nMessage:\n{message}',
@@ -606,136 +662,16 @@ def contact(request):
     return render(request, 'contact.html')
 
 
-# -------------------status----------------------------
-
+# ------------------- CANCEL ORDER ----------------------------
 @login_required(login_url='login')
 def cancel_order(request, pk):
-    order = get_object_or_404(
-        Order,
-        id=pk,
-        user=request.user
-    )
+    order = get_object_or_404(Order, id=pk, user=request.user)
 
     if order.status in ['Pending', 'Confirmed']:
         order.status = 'Cancelled'
         order.save()
         messages.success(request, 'Order cancelled successfully!')
     else:
-        messages.error(
-            request,
-            'This order cannot be cancelled.'
-        )
+        messages.error(request, 'This order cannot be cancelled.')
 
     return redirect('my_orders')
-
-
-
-
-#----------------------------- razorpay------------------------------------------
-import razorpay
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-# अपने मॉडल्स को यहाँ इम्पोर्ट रखें (जैसे Cart, Order, OrderItem)
-
-@login_required(login_url='login')
-def checkout(request):
-    cart_items = Cart.objects.filter(user=request.user)
-
-    if not cart_items:
-        messages.error(request, 'Cart khali hai!')
-        return redirect('cart')
-
-    total = sum(item.total_price() for item in cart_items)
-    razorpay_order_id = ""
-
-    # Razorpay client initialize karo
-    client = razorpay.Client(
-        auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET)
-    )
-
-    if request.method == 'POST':
-        payment_method = request.POST.get('payment_method')
-        payment_verified = False  # Default false rakhein
-
-        if payment_method == 'Online':
-            # Razorpay payment fields fetch karo
-            payment_id = request.POST.get('razorpay_payment_id')
-            order_id = request.POST.get('razorpay_order_id')
-            signature = request.POST.get('razorpay_signature')
-
-            # Agar popup cancel kiya gaya hai toh pehle hi rok do
-            if not payment_id or not order_id or not signature:
-                messages.error(request, 'Payment incomplete ya cancel ho gayi thi!')
-                return redirect('checkout')
-
-            try:
-                # Signature verification
-                client.utility.verify_payment_signature({
-                    'razorpay_order_id': order_id,
-                    'razorpay_payment_id': payment_id,
-                    'razorpay_signature': signature
-                })
-                payment_verified = True
-            except Exception as e:
-                messages.error(request, 'Payment signature verification failed!')
-                return redirect('checkout')
-        else:
-            # COD ke liye direct true
-            payment_verified = True
-
-        if payment_verified:
-            full_name = request.POST.get('full_name')
-            mobile = request.POST.get('mobile')
-            address = request.POST.get('address')
-            city = request.POST.get('city')
-            pincode = request.POST.get('pincode')
-
-            # Order save karo
-            order = Order.objects.create(
-                user=request.user,
-                full_name=full_name,
-                mobile=mobile,
-                address=address,
-                city=city,
-                pincode=pincode,
-                payment_method=payment_method,
-                total_amount=total,
-            )
-
-            # Order items save karo
-            for item in cart_items:
-                OrderItem.objects.create(
-                    order=order,
-                    product=item.product,
-                    quantity=item.quantity,
-                    price=item.product.product_price,
-                )
-
-            # Cart saaf karo
-            cart_items.delete()
-            messages.success(request, 'Order placed successfully!')
-            return redirect('order_confirm', pk=order.id)
-
-    else:
-        # UPDATE: Razorpay Order ID sirf tabhi banegi jab user pehli baar page pe aayega (GET Request)
-        try:
-            razorpay_order = client.order.create({
-                'amount': int(total * 100),
-                'currency': 'INR',
-                'payment_capture': 1
-            })
-            razorpay_order_id = razorpay_order['id']
-        except Exception as e:
-            # Agar Razorpay API key me dikkat ho toh error handle karein
-            messages.error(request, 'Razorpay configuration error!')
-            
-    return render(request, 'checkout.html', {
-        'cart_items': cart_items,
-        'total': total,
-        'user': request.user,
-        'razorpay_key': settings.RAZORPAY_API_KEY,
-        'razorpay_order_id': razorpay_order_id,
-        'razorpay_amount': int(total * 100),
-    })
