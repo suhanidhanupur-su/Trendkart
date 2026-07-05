@@ -20,10 +20,15 @@
                 <h6 class="fw-bold mb-1">Order #{{ order.id }}</h6>
                 <p style="font-size:12px; color:#aaa; margin:0;">{{ order.created_at|date:"d M Y, h:i A" }}</p>
             </div>
-            <span style="padding:5px 14px; border-radius:20px; font-size:12px; font-weight:700;
-                {% if order.status == 'Delivered' %}background:#e8f5e9; color:#2e7d32;
-                {% elif order.status == 'Cancelled' %}background:#fce4ec; color:#c62828;
-                {% elif order.status == 'Shipped' %}background:#e3f2fd; color:#1565c0;
+            
+            <!-- Updated Status Badges based on new choices -->
+            <span style="padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700;
+                {% if order.status == 'Confirmed' %}background:#fff3cd; color:#856404;
+                {% elif order.status == 'Packed' %}background:#d1ecf1; color:#0c5460;
+                {% elif order.status == 'Shipped' %}background:#cfe2ff; color:#084298;
+                {% elif order.status == 'Out for Delivery' %}background:#e2e3e5; color:#41464b;
+                {% elif order.status == 'Delivered' %}background:#d1e7dd; color:#0f5132;
+                {% elif order.status == 'Cancelled' %}background:#f8d7da; color:#842029;
                 {% else %}background:#FFF5F7; color:#FF4F81;{% endif %}">
                 {{ order.status }}
             </span>
@@ -46,12 +51,13 @@
 
         <div class="d-flex justify-content-between align-items-center">
             <span style="font-size:13px; color:#888;">
-                {{ order.payment_method }}
+                {{ order.get_payment_method_display }}
             </span>
 
             <div class="d-flex align-items-center gap-2">
 
-                {% if order.status == 'Pending' or order.status == 'Confirmed' %}
+                <!-- Cancel button will only show for Confirmed or Packed orders -->
+                {% if order.status == 'Confirmed' or order.status == 'Packed' %}
                 <a href="{% url 'cancel_order' order.id %}" class="btn btn-sm"
                     style="background:#dc3545; color:white; border-radius:8px;"
                     onclick="return confirm('Are you sure you want to cancel this order?')">

@@ -412,6 +412,29 @@
         </div>
     </nav>
 
+    <!-- Django Flash Messages (Success / Error alerts) -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show border-0 shadow-sm rounded-4" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Low Stock Alert Banner -->
+    {% if low_stock_alerts %}
+    <div class="container mt-3">
+        <div class="alert alert-warning alert-dismissible fade show border-0 shadow-sm rounded-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+            <strong>Inventory Warning:</strong> Some products are running low on stock! Please update inventory.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- PAGE CONTENT -->
     {% block content %}
 

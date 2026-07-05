@@ -1,6 +1,9 @@
 # Create your models here.
+import uuid
+import random
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 class CustomUser(AbstractUser):
     GENDER_CHOICES = (
@@ -40,16 +43,21 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         related_name='products'
     )
-
     product_name = models.CharField(max_length=255)
     product_price = models.DecimalField(max_digits=10, decimal_places=2)
     product_description = models.TextField()
     product_image = models.ImageField(upload_to='products/')
+    
+    # NAYE INVENTORY FIELDS:
+# Is line ko dhundo aur change karo:
+    sku = models.CharField(max_length=50, unique=True, null=True, blank=True, default=uuid.uuid4)
+    stock = models.IntegerField(default=0)
 
     def __str__(self):
+        if self.sku:
+            return f"{self.product_name} ({self.sku})"
         return self.product_name
     
-
 
 # -------------------------Cart model-------------------------------------------------
 class Cart(models.Model):
@@ -66,7 +74,6 @@ class Cart(models.Model):
     
 
 # ---------------------wishlist-----------------------------------------------------------
-
 class Wishlist(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='wishlist_items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -77,9 +84,6 @@ class Wishlist(models.Model):
     
 
 # --------------------OTP-----------------------------------------------
-import random
-from django.utils import timezone
-
 class OTP(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     otp = models.CharField(max_length=6)
@@ -87,20 +91,19 @@ class OTP(models.Model):
     is_verified = models.BooleanField(default=False)
 
     def is_expired(self):
-        # OTP 10 minute mein expire ho jayega
         return timezone.now() > self.created_at + timezone.timedelta(minutes=10)
 
     def __str__(self):
         return f"{self.user.email} - {self.otp}"
     
 
-
 # ------------------------Order models--------------------------------------
 class Order(models.Model):
     STATUS_CHOICES = (
-        ('Pending', 'Pending'),
-        ('Processing', 'Processing'),
+        ('Confirmed', 'Confirmed'),
+        ('Packed', 'Packed'),
         ('Shipped', 'Shipped'),
+        ('Out for Delivery', 'Out for Delivery'),
         ('Delivered', 'Delivered'),
         ('Cancelled', 'Cancelled'),
     )
@@ -117,12 +120,13 @@ class Order(models.Model):
     pincode = models.CharField(max_length=10)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='COD')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    
+    # Sirf ek baar status field rakho aur default 'Confirmed' kar do:
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='Confirmed')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Order #{self.id} - {self.user.email}"
-
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
@@ -136,8 +140,6 @@ class OrderItem(models.Model):
     def subtotal(self):
         return self.price * self.quantity
     
-
-
 
 class TeamMember(models.Model):
     employee_image = models.ImageField(upload_to='team/', null=True, blank=True)
@@ -158,50 +160,14 @@ class Gallery(models.Model):
         return self.title or "Gallery Image"
     
 
-
 # --------------------contact us-------------------------------
 class Contact(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField()
-    mobile = models.CharField(max_length=15)
+    mobile = models.CharField(max_length=15, null=True, blank=True)
     subject = models.CharField(max_length=255)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name} - {self.subject}"    
-
-# ------------------------orderitem------------------
-class OrderItem(models.Model):
-    order = models.ForeignKey(
-        Order,
-        on_delete=models.CASCADE,
-        related_name='items'
-    )
-
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE
-    )
-
-    quantity = models.PositiveIntegerField(default=1)
-
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
-
-# -------------------------------status-------------------
-STATUS_CHOICES = (
-    ('Pending', 'Pending'),
-    ('Confirmed', 'Confirmed'),
-    ('Shipped', 'Shipped'),
-    ('Delivered', 'Delivered'),
-    ('Cancelled', 'Cancelled'),
-)
-
-status = models.CharField(
-    max_length=20,
-    choices=STATUS_CHOICES,
-    default='Pending'
-)
+        return f"{self.name} - {self.subject}"

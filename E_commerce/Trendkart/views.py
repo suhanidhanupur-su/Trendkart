@@ -20,6 +20,9 @@ def home(request):
     categories = Category.objects.all()
     products = Product.objects.all()
 
+    # Low Stock Alert Logic (Stock less than 5)
+    low_stock_alerts = Product.objects.filter(stock__lt=5)
+
     wishlist_ids = []
     if request.user.is_authenticated:
         wishlist_ids = list(
@@ -30,6 +33,7 @@ def home(request):
         'categories': categories,
         'products': products,
         'wishlist_ids': wishlist_ids,
+        'low_stock_alerts': low_stock_alerts,
     })
 
 
@@ -308,7 +312,7 @@ def product(request):
 
     selected_category = request.GET.get('category', '')
     max_price = request.GET.get('max_price', '20000')
-    search_query = request.GET.get('search', '')
+    search_query = request.GET.get('search', '')  # Matches name="search" from base.html
     sort = request.GET.get('sort', '')
 
     if selected_category:
@@ -318,9 +322,11 @@ def product(request):
         products = products.filter(product_price__lte=max_price)
 
     if search_query:
+        # Search by Product Name, Category Name, or SKU
         products = products.filter(
             Q(product_name__icontains=search_query) |
-            Q(category__category_name__icontains=search_query)
+            Q(category__category_name__icontains=search_query) |
+            Q(sku__icontains=search_query)
         )
 
     if sort == 'low':
@@ -464,20 +470,17 @@ def checkout(request):
 
     if request.method == 'POST':
         payment_method = request.POST.get('payment_method')
-        payment_verified = False  # Default false rakhein
+        payment_verified = False  
 
         if payment_method == 'Online':
-            # Razorpay payment fields fetch karo
             payment_id = request.POST.get('razorpay_payment_id')
             order_id = request.POST.get('razorpay_order_id')
             signature = request.POST.get('razorpay_signature')
 
-            # Agar popup cancel kiya gaya hai toh pehle hi rok do
             if not payment_id or not order_id or not signature:
                 messages.error(request, 'Payment incomplete ya cancel ho gayi thi!')
                 return redirect('checkout')
 
-            # ✅ UPDATED: Complete requested try/except validation block
             try:
                 params = {
                     'razorpay_order_id': order_id,
@@ -490,11 +493,10 @@ def checkout(request):
                 messages.error(request, 'Payment verification failed!')
                 return redirect('checkout')
             except Exception as e:
-                print(f"Payment error: {e}")  # Terminal mein error dekho
+                print(f"Payment error: {e}")  
                 messages.error(request, f'Payment error: {str(e)}')
                 return redirect('checkout')
         else:
-            # COD ke liye direct true
             payment_verified = True
 
         if payment_verified:
@@ -504,7 +506,6 @@ def checkout(request):
             city = request.POST.get('city')
             pincode = request.POST.get('pincode')
 
-            # Order save karo
             order = Order.objects.create(
                 user=request.user,
                 full_name=full_name,
@@ -516,7 +517,6 @@ def checkout(request):
                 total_amount=total,
             )
 
-            # Order items save karo
             for item in cart_items:
                 OrderItem.objects.create(
                     order=order,
@@ -525,13 +525,11 @@ def checkout(request):
                     price=item.product.product_price,
                 )
 
-            # Cart saaf karo
             cart_items.delete()
             messages.success(request, 'Order placed successfully!')
             return redirect('order_confirm', pk=order.id)
 
     else:
-        # Razorpay Order ID create karein GET request par
         try:
             razorpay_order = client.order.create({
                 'amount': int(total * 100),
@@ -627,7 +625,6 @@ def vision(request):
     return render(request, 'vision.html')
 
 
-# ------------------- CONTACT VIEW ------------------------------
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -662,7 +659,6 @@ def contact(request):
     return render(request, 'contact.html')
 
 
-# ------------------- CANCEL ORDER ----------------------------
 @login_required(login_url='login')
 def cancel_order(request, pk):
     order = get_object_or_404(Order, id=pk, user=request.user)
