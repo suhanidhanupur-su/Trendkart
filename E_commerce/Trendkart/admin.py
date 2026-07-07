@@ -89,3 +89,5 @@ admin.site.register(Cart)
 admin.site.register(Wishlist)
 admin.site.register(OTP)
 admin.site.register(OrderItem)
+
+
