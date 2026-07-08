@@ -81,6 +81,7 @@ class ContactAdmin(admin.ModelAdmin):
 
 admin.site.register(Contact, ContactAdmin)
 
+
 # 5. Remaining Models Registration
 admin.site.register(Category)
 admin.site.register(TeamMember)
