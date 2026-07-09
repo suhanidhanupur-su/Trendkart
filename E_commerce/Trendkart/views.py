@@ -14,6 +14,8 @@ from .models import (
     OTP, Order, OrderItem, TeamMember,
     Gallery, Contact, Feedback
 )
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 
 # ==================== HOME ====================
 def home(request):
@@ -783,3 +785,104 @@ def inventory(request):
     return render(request, 'inventory.html', {
         'products': products
     })
+
+# invoice
+
+
+@login_required(login_url='login')
+def download_invoice(request, pk):
+    order = get_object_or_404(Order, id=pk, user=request.user)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Invoice_{order.id}.pdf"'
+
+    p = canvas.Canvas(response)
+
+    # Header
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(200, 800, "TrendKart Invoice")
+
+    # Order Info
+    p.setFont("Helvetica", 12)
+    p.drawString(50, 760, f"Invoice No: {order.id}")
+    p.drawString(50, 740, f"Customer: {order.full_name}")
+    p.drawString(50, 720, f"Mobile: {order.mobile}")
+    p.drawString(50, 700, f"Payment: {order.payment_method}")
+    p.drawString(50, 680, f"Date: {order.created_at.strftime('%d-%m-%Y')}")
+
+    # Products
+    y = 630
+
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(50, y, "Product")
+    p.drawString(300, y, "Qty")
+    p.drawString(400, y, "Price")
+
+    y -= 30
+
+    p.setFont("Helvetica", 12)
+
+    for item in order.items.all():
+        p.drawString(50, y, item.product.product_name)
+        p.drawString(300, y, str(item.quantity))
+        p.drawString(400, y, f"₹ {item.price}")
+        y -= 25
+
+    y -= 20
+
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(50, y, f"Total Amount: ₹ {order.total_amount}")
+
+    p.save()
+
+    return response
+
+
+# Invoice download
+
+@login_required(login_url='login')
+def download_invoice(request, pk):
+
+    order = get_object_or_404(Order, id=pk, user=request.user)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Invoice_{order.id}.pdf"'
+
+    p = canvas.Canvas(response)
+
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(200, 800, "TrendKart Invoice")
+
+    p.setFont("Helvetica", 12)
+    p.drawString(50, 760, f"Order ID: {order.id}")
+    p.drawString(50, 740, f"Customer: {order.full_name}")
+    p.drawString(50, 720, f"Mobile: {order.mobile}")
+    p.drawString(50, 700, f"Payment: {order.payment_method}")
+    p.drawString(50, 680, f"Date: {order.created_at.strftime('%d-%m-%Y')}")
+
+    y = 630
+
+    for item in order.items.all():
+        p.drawString(
+            50,
+            y,
+            f"{item.product.product_name} x {item.quantity}"
+        )
+
+        p.drawString(
+            350,
+            y,
+            f"₹ {item.subtotal()}"
+        )
+
+        y -= 25
+
+    p.drawString(
+        50,
+        y - 20,
+        f"Total Amount: ₹ {order.total_amount}"
+    )
+
+    p.save()
+
+    return response

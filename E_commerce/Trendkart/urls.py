@@ -53,6 +53,7 @@ urlpatterns = [
 
      path('feedback/submit/<int:pk>/', submit_feedback, name='submit_feedback'),
      path('inventory/', views.inventory, name='inventory'),
+     path('invoice/<int:pk>/', views.download_invoice, name='download_invoice'),
     #  path('feedback/submit/<int:pk>/', submit_feedback, name='submit_feedback'),
     #  path('feedback/list/', feedback_list, name='feedback_list'),
     #  path('feedback/<int:pk>/<str:action>/', feedback_action, name='feedback_action'),

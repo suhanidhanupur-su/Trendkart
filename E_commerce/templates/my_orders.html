@@ -18,10 +18,11 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <h6 class="fw-bold mb-1">Order #{{ order.id }}</h6>
-                <p style="font-size:12px; color:#aaa; margin:0;">{{ order.created_at|date:"d M Y, h:i A" }}</p>
+                <p style="font-size:12px; color:#aaa; margin:0;">
+                    {{ order.created_at|date:"d M Y, h:i A" }}
+                </p>
             </div>
-            
-            <!-- Updated Status Badges based on new choices -->
+
             <span style="padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700;
                 {% if order.status == 'Confirmed' %}background:#fff3cd; color:#856404;
                 {% elif order.status == 'Packed' %}background:#d1ecf1; color:#0c5460;
@@ -34,33 +35,52 @@
             </span>
         </div>
 
-        <!-- Order Items -->
         {% for item in order.items.all %}
         <div class="d-flex align-items-center gap-3 mb-2">
-            <img src="{{ item.product.product_image.url }}" width="55" height="55"
-                style="object-fit:cover; border-radius:8px; flex-shrink:0;">
+            <img src="{{ item.product.product_image.url }}"
+                 width="55"
+                 height="55"
+                 style="object-fit:cover; border-radius:8px; flex-shrink:0;">
+
             <div class="flex-grow-1">
-                <p style="font-size:13px; font-weight:700; margin-bottom:2px;">{{ item.product.product_name }}</p>
-                <p style="font-size:12px; color:#888; margin:0;">Qty: {{ item.quantity }} × ₹{{ item.price }}</p>
+                <p style="font-size:13px; font-weight:700; margin-bottom:2px;">
+                    {{ item.product.product_name }}
+                </p>
+
+                <p style="font-size:12px; color:#888; margin:0;">
+                    Qty: {{ item.quantity }} × ₹{{ item.price }}
+                </p>
             </div>
-            <p style="font-weight:700; color:#FF4F81; margin:0;">₹{{ item.subtotal }}</p>
+
+            <p style="font-weight:700; color:#FF4F81; margin:0;">
+                ₹{{ item.subtotal }}
+            </p>
         </div>
         {% endfor %}
 
         <hr style="border-color:#f0e0e7;">
 
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
             <span style="font-size:13px; color:#888;">
                 {{ order.get_payment_method_display }}
             </span>
 
             <div class="d-flex align-items-center gap-2">
 
-                <!-- Cancel button will only show for Confirmed or Packed orders -->
+                <!-- Download Invoice Button -->
+                <a href="{% url 'download_invoice' order.id %}"
+                   class="btn btn-success btn-sm"
+                   style="border-radius:8px;">
+                    📄 Invoice
+                </a>
+
+                <!-- Cancel Order Button -->
                 {% if order.status == 'Confirmed' or order.status == 'Packed' %}
-                <a href="{% url 'cancel_order' order.id %}" class="btn btn-sm"
-                    style="background:#dc3545; color:white; border-radius:8px;"
-                    onclick="return confirm('Are you sure you want to cancel this order?')">
+                <a href="{% url 'cancel_order' order.id %}"
+                   class="btn btn-sm"
+                   style="background:#dc3545; color:white; border-radius:8px;"
+                   onclick="return confirm('Are you sure you want to cancel this order?')">
                     <i class="bi bi-x-circle me-1"></i>Cancel
                 </a>
                 {% endif %}
@@ -70,6 +90,7 @@
                 </span>
 
             </div>
+
         </div>
 
     </div>
@@ -78,9 +99,17 @@
     {% else %}
     <div class="text-center py-5">
         <div style="font-size:60px; margin-bottom:16px;">📦</div>
-        <h4 class="fw-bold" style="color:#222;">No orders placed yet!</h4>
-        <p style="color:#aaa; margin-bottom:20px;">Start shopping now</p>
-        <a href="{% url 'product' %}" style="background:#FF4F81; color:#fff; padding:12px 28px;
+
+        <h4 class="fw-bold" style="color:#222;">
+            No orders placed yet!
+        </h4>
+
+        <p style="color:#aaa; margin-bottom:20px;">
+            Start shopping now
+        </p>
+
+        <a href="{% url 'product' %}"
+           style="background:#FF4F81; color:#fff; padding:12px 28px;
                   border-radius:10px; text-decoration:none; font-weight:700;">
             View Products
         </a>
