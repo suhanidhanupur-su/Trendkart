@@ -39,6 +39,103 @@
                 Wishlist
             </button>
 
+          <!--    feedback       -->
+            <hr class="my-5">
+
+<div class="card shadow-sm border-0 p-4">
+    <h4 class="mb-4">⭐ Leave a Review</h4>
+
+    {% if user.is_authenticated %}
+
+    <form method="POST" action="{% url 'submit_feedback' product.id %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Rating</label>
+
+            <select name="rating" class="form-select">
+                <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                <option value="4">⭐⭐⭐⭐ (4)</option>
+                <option value="3">⭐⭐⭐ (3)</option>
+                <option value="2">⭐⭐ (2)</option>
+                <option value="1">⭐ (1)</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Review</label>
+
+            <textarea
+                name="message"
+                rows="4"
+                class="form-control"
+                placeholder="Write your review..."
+                required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Submit Review
+        </button>
+
+    </form>
+
+    {% else %}
+
+    <p>
+        <a href="{% url 'login' %}">
+            Login
+        </a>
+        to write a review.
+    </p>
+
+    {% endif %}
+</div>
+
+
+<div class="mt-5">
+
+    <h4>Customer Reviews</h4>
+
+    {% for review in product.feedbacks.all %}
+
+        {% if review.status == 'Approved' %}
+
+        <div class="border rounded p-3 mb-3">
+
+            <h6>
+                {{ review.user.full_name }}
+            </h6>
+
+            <p class="text-warning mb-1">
+
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.rating %}
+                        ⭐
+                    {% endif %}
+                {% endfor %}
+
+            </p>
+
+            <p>
+                {{ review.message }}
+            </p>
+
+            <small class="text-muted">
+                {{ review.created_at }}
+            </small>
+
+        </div>
+
+        {% endif %}
+
+    {% empty %}
+
+        <p>No reviews yet.</p>
+
+    {% endfor %}
+
+</div>
+
         </div>
 
     </div>

@@ -160,3 +160,6 @@ AUTHENTICATION_BACKENDS = [
 
 RAZORPAY_API_KEY = 'rzp_test_T8JznkLSaHNKGE'      # apni key daalo
 RAZORPAY_API_SECRET = '02VXYIvkEr7tBo98rcue0dtS'    # apna secret daalo
+
+
+

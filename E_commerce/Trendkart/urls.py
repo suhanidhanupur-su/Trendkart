@@ -3,6 +3,7 @@ from .views import *
 from django.urls import path
 from . import views  # ← Import करो
 from .views import verify_otp, resend_otp
+from .views import submit_feedback
 
 
 urlpatterns = [
@@ -47,5 +48,12 @@ urlpatterns = [
      path('reset-password-otp/', reset_password_otp, name='reset_password_otp'),
      path('reset-password-new/', reset_password_new, name='reset_password_new'),
      path('contact/', contact, name='contact'),
-     path('cancel-order/<int:pk>/',views.cancel_order,name='cancel_order'),
+     
+     path('cancel-order/<int:pk>/', views.cancel_order, name='cancel_order'),
+
+     path('feedback/submit/<int:pk>/', submit_feedback, name='submit_feedback'),
+     path('inventory/', views.inventory, name='inventory'),
+    #  path('feedback/submit/<int:pk>/', submit_feedback, name='submit_feedback'),
+    #  path('feedback/list/', feedback_list, name='feedback_list'),
+    #  path('feedback/<int:pk>/<str:action>/', feedback_action, name='feedback_action'),
 ]

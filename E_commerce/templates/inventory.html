@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">📦 Inventory Management</h2>
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>SKU</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for product in products %}
+                <tr>
+
+                    <td>{{ product.product_name }}</td>
+
+                    <td>{{ product.sku }}</td>
+
+                    <td>{{ product.stock }}</td>
+
+                    <td>
+
+                        {% if product.stock == 0 %}
+                            <span class="badge bg-danger">
+                                Out Of Stock
+                            </span>
+
+                        {% elif product.stock < 5 %}
+                            <span class="badge bg-warning text-dark">
+                                Low Stock
+                            </span>
+
+                        {% else %}
+                            <span class="badge bg-success">
+                                In Stock
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

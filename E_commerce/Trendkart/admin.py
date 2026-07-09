@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Category, Product, Cart, Wishlist, OTP, Order, OrderItem, TeamMember, Gallery, Contact
-
+from .models import (
+    CustomUser, Category, Product, Cart, Wishlist,
+    OTP, Order, OrderItem, TeamMember,
+    Gallery, Contact, Feedback
+)
 # 1. Custom User Admin Configuration
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -80,6 +83,43 @@ class ContactAdmin(admin.ModelAdmin):
     search_fields = ('name', 'email', 'subject')
 
 admin.site.register(Contact, ContactAdmin)
+
+
+
+# 6.
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'product',
+        'rating',
+        'status',
+        'created_at'
+    )
+
+    list_filter = (
+        'status',
+        'rating',
+        'created_at'
+    )
+
+    search_fields = (
+        'user__email',
+        'product__product_name',
+        'message'
+    )
+
+    actions = ['approve_feedback', 'reject_feedback']
+
+    def approve_feedback(self, request, queryset):
+        queryset.update(status='Approved')
+
+    approve_feedback.short_description = "Approve selected feedback"
+
+    def reject_feedback(self, request, queryset):
+        queryset.update(status='Rejected')
+
+    reject_feedback.short_description = "Reject selected feedback"
 
 
 # 5. Remaining Models Registration

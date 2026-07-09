@@ -10,8 +10,9 @@ from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from django.db.models import Q
 from .models import (
-    CustomUser, Category, Product, Cart, Wishlist, 
-    OTP, Order, OrderItem, TeamMember, Gallery, Contact
+    CustomUser, Category, Product, Cart, Wishlist,
+    OTP, Order, OrderItem, TeamMember,
+    Gallery, Contact, Feedback
 )
 
 # ==================== HOME ====================
@@ -671,3 +672,114 @@ def cancel_order(request, pk):
         messages.error(request, 'This order cannot be cancelled.')
 
     return redirect('my_orders')
+
+
+
+
+
+
+@login_required(login_url='login')
+def submit_feedback(request, pk):
+    return redirect('product_detail', pk=pk)
+
+
+@login_required(login_url='login')
+def feedback_list(request):
+    return render(request, 'feedback_list.html')
+
+
+@login_required(login_url='login')
+def feedback_action(request, pk, action):
+    return redirect('feedback_list')
+
+
+@login_required(login_url='login')
+def submit_feedback(request, pk):
+    product = get_object_or_404(Product, id=pk)
+
+    if request.method == 'POST':
+        message = request.POST.get('message')
+        rating = request.POST.get('rating', 5)
+
+        already_reviewed = Feedback.objects.filter(
+            user=request.user,
+            product=product
+        ).exists()
+
+        if already_reviewed:
+            messages.error(request, 'You already reviewed this product!')
+        else:
+            Feedback.objects.create(
+                user=request.user,
+                product=product,
+                message=message,
+                rating=rating
+            )
+            messages.success(request, 'Review submitted successfully!')
+
+    return redirect('product_detail', pk=pk)
+
+
+@login_required(login_url='login')
+def feedback_list(request):
+    if not request.user.is_staff:
+        return redirect('home')
+
+    feedbacks = Feedback.objects.all().order_by('-created_at')
+
+    return render(request, 'feedback_list.html', {
+        'feedbacks': feedbacks
+    })
+
+
+@login_required(login_url='login')
+def feedback_action(request, pk, action):
+    if not request.user.is_staff:
+        return redirect('home')
+
+    feedback = get_object_or_404(Feedback, id=pk)
+
+    if action == 'approve':
+        feedback.status = 'Approved'
+        feedback.save()
+
+    elif action == 'reject':
+        feedback.status = 'Rejected'
+        feedback.save()
+
+    return redirect('feedback_list')
+
+
+
+
+from .models import Feedback, Product
+
+@login_required(login_url='login')
+def submit_feedback(request, pk):
+    product = get_object_or_404(Product, id=pk)
+
+    if request.method == "POST":
+        rating = request.POST.get('rating')
+        message = request.POST.get('message')
+
+        Feedback.objects.create(
+            user=request.user,
+            product=product,
+            rating=rating,
+            message=message,
+            status='Pending'
+        )
+
+        messages.success(request, "Review submitted successfully!")
+    
+    return redirect('product_detail', pk=pk)
+
+
+# Inventory 
+@login_required(login_url='login')
+def inventory(request):
+    products = Product.objects.all()
+
+    return render(request, 'inventory.html', {
+        'products': products
+    })
