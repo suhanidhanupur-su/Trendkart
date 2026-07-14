@@ -54,6 +54,8 @@ urlpatterns = [
      path('feedback/submit/<int:pk>/', submit_feedback, name='submit_feedback'),
      path('inventory/', views.inventory, name='inventory'),
      path('invoice/<int:pk>/', views.download_invoice, name='download_invoice'),
+
+     path('submit-query/<int:product_id>/',views.submit_query,name='submit_query'),
     #  path('feedback/submit/<int:pk>/', submit_feedback, name='submit_feedback'),
     #  path('feedback/list/', feedback_list, name='feedback_list'),
     #  path('feedback/<int:pk>/<str:action>/', feedback_action, name='feedback_action'),

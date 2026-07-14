@@ -886,3 +886,23 @@ def download_invoice(request, pk):
     p.save()
 
     return response
+
+
+# -------------------need help---------------------------
+from django.contrib import messages
+from .models import Product, ProductQuery
+
+def submit_query(request, product_id):
+    if request.method == "POST":
+        product = Product.objects.get(id=product_id)
+
+        query_text = request.POST.get("query")
+
+        ProductQuery.objects.create(
+            product=product,
+            query=query_text
+        )
+
+        messages.success(request, "Your query has been submitted successfully!")
+
+    return redirect('product_detail', pk=product_id)

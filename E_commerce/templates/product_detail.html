@@ -27,7 +27,7 @@
                 {{ product.product_description }}
             </p>
 
-            
+
 
             <!-- Naya -->
             <a href="{% url 'add_to_cart' product.id %}" class="btn btn-dark">
@@ -39,107 +39,160 @@
                 Wishlist
             </button>
 
-          <!--    feedback       -->
+
+            <!-- need help -->
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#helpModal">
+                Need Help?
+            </button>
+
+
+            <!--    feedback       -->
             <hr class="my-5">
 
-<div class="card shadow-sm border-0 p-4">
-    <h4 class="mb-4">⭐ Leave a Review</h4>
+            <div class="card shadow-sm border-0 p-4">
+                <h4 class="mb-4">⭐ Leave a Review</h4>
 
-    {% if user.is_authenticated %}
+                {% if user.is_authenticated %}
 
-    <form method="POST" action="{% url 'submit_feedback' product.id %}">
-        {% csrf_token %}
+                <form method="POST" action="{% url 'submit_feedback' product.id %}">
+                    {% csrf_token %}
 
-        <div class="mb-3">
-            <label class="form-label">Rating</label>
+                    <div class="mb-3">
+                        <label class="form-label">Rating</label>
 
-            <select name="rating" class="form-select">
-                <option value="5">⭐⭐⭐⭐⭐ (5)</option>
-                <option value="4">⭐⭐⭐⭐ (4)</option>
-                <option value="3">⭐⭐⭐ (3)</option>
-                <option value="2">⭐⭐ (2)</option>
-                <option value="1">⭐ (1)</option>
-            </select>
-        </div>
+                        <select name="rating" class="form-select">
+                            <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                            <option value="4">⭐⭐⭐⭐ (4)</option>
+                            <option value="3">⭐⭐⭐ (3)</option>
+                            <option value="2">⭐⭐ (2)</option>
+                            <option value="1">⭐ (1)</option>
+                        </select>
+                    </div>
 
-        <div class="mb-3">
-            <label class="form-label">Review</label>
+                    <div class="mb-3">
+                        <label class="form-label">Review</label>
 
-            <textarea
-                name="message"
-                rows="4"
-                class="form-control"
-                placeholder="Write your review..."
-                required></textarea>
-        </div>
+                        <textarea name="message" rows="4" class="form-control" placeholder="Write your review..."
+                            required></textarea>
+                    </div>
 
-        <button type="submit" class="btn btn-success">
-            Submit Review
-        </button>
+                    <button type="submit" class="btn btn-success">
+                        Submit Review
+                    </button>
 
-    </form>
+                </form>
 
-    {% else %}
+                {% else %}
 
-    <p>
-        <a href="{% url 'login' %}">
-            Login
-        </a>
-        to write a review.
-    </p>
+                <p>
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+                    to write a review.
+                </p>
 
-    {% endif %}
-</div>
+                {% endif %}
+            </div>
 
 
-<div class="mt-5">
+            <div class="mt-5">
 
-    <h4>Customer Reviews</h4>
+                <h4>Customer Reviews</h4>
 
-    {% for review in product.feedbacks.all %}
+                {% for review in product.feedbacks.all %}
 
-        {% if review.status == 'Approved' %}
+                {% if review.status == 'Approved' %}
 
-        <div class="border rounded p-3 mb-3">
+                <div class="border rounded p-3 mb-3">
 
-            <h6>
-                {{ review.user.full_name }}
-            </h6>
+                    <h6>
+                        {{ review.user.full_name }}
+                    </h6>
 
-            <p class="text-warning mb-1">
+                    <p class="text-warning mb-1">
 
-                {% for i in "12345" %}
-                    {% if forloop.counter <= review.rating %}
-                        ⭐
-                    {% endif %}
+                        {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %} ⭐ {% endif %} {% endfor %} </p>
+
+                            <p>
+                                {{ review.message }}
+                            </p>
+
+                            <small class="text-muted">
+                                {{ review.created_at }}
+                            </small>
+
+                </div>
+
+                {% endif %}
+
+                {% empty %}
+
+                <p>No reviews yet.</p>
+
                 {% endfor %}
 
-            </p>
-
-            <p>
-                {{ review.message }}
-            </p>
-
-            <small class="text-muted">
-                {{ review.created_at }}
-            </small>
-
-        </div>
-
-        {% endif %}
-
-    {% empty %}
-
-        <p>No reviews yet.</p>
-
-    {% endfor %}
-
-</div>
+            </div>
 
         </div>
 
     </div>
 
+</div>
+
+
+<!-- Need Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Need Help?</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <form method="POST" action="{% url 'submit_query' product.id %}">
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Product Name
+                        </label>
+
+                        <input type="text" class="form-control" value="{{ product.product_name }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Your Query
+                        </label>
+
+                        <textarea name="query" rows="4" class="form-control" placeholder="Write your query here..."
+                            required></textarea>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+
+                    <button type="submit" class="btn btn-primary">
+                        Submit
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
 </div>
 
 {% endblock %}
