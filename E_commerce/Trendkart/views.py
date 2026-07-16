@@ -722,7 +722,6 @@ def feedback_action(request, pk, action):
 @login_required(login_url='login')
 def submit_feedback(request, pk):
 
-    
     product = get_object_or_404(Product, id=pk)
 
     if request.method == 'POST':
