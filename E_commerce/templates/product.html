@@ -33,7 +33,8 @@
                         <input type="range" name="max_price" min="0" max="20000" step="100"
                             value="{{ max_price|default:20000 }}" style="width:100%; accent-color:#FF4F81;"
                             oninput="document.getElementById('priceDisplay').textContent = 'Up to ₹' + parseInt(this.value).toLocaleString('en-IN')">
-                        <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:6px;">
+                        <div
+                            style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-top:6px;">
                             <span>₹0</span><span>₹20,000</span>
                         </div>
                         <p id="priceDisplay" class="text-center fw-bold mt-2" style="font-size:13px; color:#FF4F81;">
@@ -80,24 +81,23 @@
         <div class="col-md-9">
 
             <!-- Search + Sort -->
-           <!-- Search + Sort -->
-<div class="d-flex gap-3 mb-3">
-    <form method="GET" action="{% url 'product' %}" class="flex-grow-1 d-flex gap-3">
-        <input type="hidden" name="category" value="{{ selected_category }}">
-        <input type="hidden" name="max_price" value="{{ max_price }}">
+            <!-- Search + Sort -->
+            <div class="d-flex gap-3 mb-3">
+                <form method="GET" action="{% url 'product' %}" class="flex-grow-1 d-flex gap-3">
+                    <input type="hidden" name="category" value="{{ selected_category }}">
+                    <input type="hidden" name="max_price" value="{{ max_price }}">
 
-        <!-- Search hata diya ✅ -->
+                    <!-- Search hata diya ✅ -->
 
-        <select name="sort"
-            style="padding:11px 14px; border:1.5px solid #eee; border-radius:10px;
+                    <select name="sort" style="padding:11px 14px; border:1.5px solid #eee; border-radius:10px;
                    font-size:13px; background:#fff; color:#555; outline:none; min-width:150px;"
-            onchange="this.form.submit()">
-            <option value="">Sort by</option>
-            <option value="low"  {% if sort == 'low' %}selected{% endif %}>Price: Low to High</option>
-            <option value="high" {% if sort == 'high' %}selected{% endif %}>Price: High to Low</option>
-        </select>
-    </form>
-</div>
+                        onchange="this.form.submit()">
+                        <option value="">Sort by</option>
+                        <option value="low" {% if sort == 'low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="high" {% if sort == 'high' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                </form>
+            </div>
 
             <!-- Result Count -->
             <p style="font-size:13px; color:#aaa;" class="mb-3">{{ products|length }} product(s) found</p>
@@ -118,17 +118,16 @@
                         </span>
 
                         <!-- Wishlist Heart -->
-                        <a href="{% url 'toggle_wishlist' product.id %}" 
-                           style="position:absolute; top:10px; right:10px; background:#fff;
+                        <a href="{% url 'toggle_wishlist' product.id %}" style="position:absolute; top:10px; right:10px; background:#fff;
                                   border:none; border-radius:50%; width:30px; height:30px;
                                   display:flex; align-items:center; justify-content:center;
                                   box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:2;
                                   font-size:15px; text-decoration:none; cursor:pointer;
                                   text-align:center; line-height:30px;">
                             {% if user.is_authenticated %}
-                                {% if product.id in wishlist_ids %}❤️{% else %}🤍{% endif %}
+                            {% if product.id in wishlist_ids %}❤️{% else %}🤍{% endif %}
                             {% else %}
-                                🤍
+                            🤍
                             {% endif %}
                         </a>
 
@@ -145,17 +144,13 @@
                             </p>
 
                             <!-- Buttons -->
-                            <div style="display:flex; gap:6px;">
-                                <a href="{% url 'add_to_cart' product.id %}" style="flex:1; background:#111; color:#fff;
-                                          border-radius:7px; padding:7px 0; font-size:11px;
-                                          font-weight:600; text-align:center; text-decoration:none;
-                                          display:block;">
-                                    Add to Cart
+                            <div class="d-grid gap-2 mt-2">
+                                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-dark rounded-pill fw-bold">
+                                    🛒 Add to Cart
                                 </a>
-                                <a href="{% url 'product_detail' product.id %}" style="flex:1; background:#111; color:#fff;
-                                          border-radius:7px; padding:7px 0; font-size:11px;
-                                          font-weight:600; text-align:center; text-decoration:none;
-                                          display:block;">
+
+                                <a href="{% url 'product_detail' product.id %}"
+                                    class="btn btn-outline-danger rounded-pill fw-bold">
                                     Buy Now
                                 </a>
                             </div>

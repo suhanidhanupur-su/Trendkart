@@ -354,18 +354,42 @@ def product(request):
         'search': search_query,
     })
 
+# ---------------------product details-------------------------------
+
+from django.db.models import Avg
 
 def product_detail(request, pk):
-    """Detailed view for a selected product, checking wishlist status."""
     product = get_object_or_404(Product, id=pk)
-    
+
+    feedbacks = Feedback.objects.filter(
+        product=product,
+        status='Approved'
+    )
+
+    avg_rating = feedbacks.aggregate(
+        Avg('rating')
+    )['rating__avg']
+
     is_wishlisted = False
+    user_has_reviewed = False
+
     if request.user.is_authenticated:
-        is_wishlisted = Wishlist.objects.filter(user=request.user, product=product).exists()
-    
+        is_wishlisted = Wishlist.objects.filter(
+            user=request.user,
+            product=product
+        ).exists()
+
+        user_has_reviewed = Feedback.objects.filter(
+            user=request.user,
+            product=product
+        ).exists()
+
     return render(request, 'product_detail.html', {
         'product': product,
+        'feedbacks': feedbacks,
+        'avg_rating': avg_rating,
         'is_wishlisted': is_wishlisted,
+        'user_has_reviewed': user_has_reviewed,
     })
 
 
@@ -697,6 +721,8 @@ def feedback_action(request, pk, action):
 
 @login_required(login_url='login')
 def submit_feedback(request, pk):
+
+    
     product = get_object_or_404(Product, id=pk)
 
     if request.method == 'POST':
