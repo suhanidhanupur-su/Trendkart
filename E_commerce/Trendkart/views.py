@@ -742,7 +742,7 @@ def submit_feedback(request, pk):
                 message=message,
                 rating=rating
             )
-            
+    
             messages.success(request, 'Review submitted successfully!')
 
     return redirect('product_detail', pk=pk)
