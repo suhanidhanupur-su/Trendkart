@@ -158,7 +158,6 @@ DATE_INPUT_FORMATS = [
     '%Y-%m-%d',
 ]
 
-
 # Default Primary Key
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
