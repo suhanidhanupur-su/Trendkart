@@ -92,6 +92,28 @@ DATABASES = {
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
     DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
+elif 'VERCEL' in os.environ or os.environ.get('VERCEL_ENV'):
+    # On Vercel serverless lambdas, /var/task is read-only.
+    # Copy db.sqlite3 to /tmp if it does not already exist so it is writable.
+    import shutil
+    tmp_db = Path('/tmp/db.sqlite3')
+    if not tmp_db.exists():
+        for candidate in [
+            BASE_DIR / 'db.sqlite3',
+            BASE_DIR.parent / 'db.sqlite3',
+            Path('/var/task/E_commerce/db.sqlite3'),
+            Path('/var/task/db.sqlite3'),
+        ]:
+            if candidate.exists():
+                try:
+                    shutil.copy2(candidate, tmp_db)
+                    break
+                except Exception as e:
+                    print(f"Error copying {candidate} to {tmp_db}: {e}")
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': tmp_db,
+    }
 
 
 # Password validation
