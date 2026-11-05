@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="text-center py-5 px-3" style="background:linear-gradient(135deg,#1a0010,#3d0020,#FF4F81);">
+    <p class="mb-2" style="color:#ffc0d1;font-size:12px;letter-spacing:3px;text-transform:uppercase;">TRENDKART</p>
+    <h1 class="mb-3" style="color:#fff;font-size:clamp(32px,5vw,48px);font-weight:800;">About Us</h1>
+    <p class="mx-auto mb-0" style="color:#ffc0d1;font-size:15px;max-width:620px;line-height:1.8;">
+        Style for every day, quality you can trust, and a shopping experience made around you.
+    </p>
+</section>
+
+<main class="container py-5">
+    <section class="mx-auto mb-5 p-4 p-md-5 text-center" style="max-width:900px;background:#fff;border:1px solid #f0e0e7;border-radius:18px;box-shadow:0 2px 12px rgba(255,79,129,0.07);">
+        <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:64px;height:64px;background:#FFF5F7;border:1px solid #ffc0d1;border-radius:18px;color:#FF4F81;font-size:28px;">
+            <i class="bi bi-bag-heart" aria-hidden="true"></i>
+        </div>
+        <h2 class="mb-3" style="color:#222;font-weight:800;">Fashion that feels like you</h2>
+        <p class="mb-0 mx-auto" style="max-width:720px;color:#666;font-size:15px;line-height:1.9;">
+            TrendKart brings together thoughtfully selected fashion and everyday essentials at prices that make great style accessible. We want every visit to feel simple and enjoyable, from finding something you love to receiving it at your door.
+        </p>
+    </section>
+
+    <section class="row g-4 mb-5" aria-label="What matters to us">
+        <div class="col-md-4">
+            <article class="h-100 p-4 text-center" style="background:#fff;border:1px solid #f0e0e7;border-radius:16px;">
+                <div class="mb-3" style="font-size:34px;color:#FF4F81;"><i class="bi bi-gem" aria-hidden="true"></i></div>
+                <h3 style="font-size:18px;font-weight:700;color:#222;">Quality</h3>
+                <p class="mb-0" style="font-size:14px;color:#777;line-height:1.7;">Products selected with care, so you can shop with confidence.</p>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <article class="h-100 p-4 text-center" style="background:#fff;border:1px solid #f0e0e7;border-radius:16px;">
+                <div class="mb-3" style="font-size:34px;color:#FF4F81;"><i class="bi bi-heart" aria-hidden="true"></i></div>
+                <h3 style="font-size:18px;font-weight:700;color:#222;">Customer first</h3>
+                <p class="mb-0" style="font-size:14px;color:#777;line-height:1.7;">Helpful service and a smooth experience at every step.</p>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <article class="h-100 p-4 text-center" style="background:#fff;border:1px solid #f0e0e7;border-radius:16px;">
+                <div class="mb-3" style="font-size:34px;color:#FF4F81;"><i class="bi bi-tag" aria-hidden="true"></i></div>
+                <h3 style="font-size:18px;font-weight:700;color:#222;">Everyday value</h3>
+                <p class="mb-0" style="font-size:14px;color:#777;line-height:1.7;">Fresh styles and fair prices for more moments that matter.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <p class="mb-1" style="color:#FF4F81;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">The people behind TrendKart</p>
+            <h2 style="color:#222;font-weight:800;">Meet our team</h2>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for member in team_members %}
+            <div class="col-sm-6 col-lg-4">
+                <article class="h-100 p-4 text-center" style="background:#fff;border:1px solid #f0e0e7;border-radius:16px;box-shadow:0 2px 12px rgba(255,79,129,0.05);">
+                    {% if member.employee_image %}
+                    <img src="{{ member.employee_image.url }}" alt="{{ member.employee_name }}" class="mb-3 rounded-circle" style="width:112px;height:112px;object-fit:cover;">
+                    {% else %}
+                    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width:112px;height:112px;background:#FFF5F7;color:#FF4F81;font-size:42px;" aria-hidden="true">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    {% endif %}
+                    <h3 class="mb-1" style="font-size:18px;font-weight:700;color:#222;">{{ member.employee_name }}</h3>
+                    <p class="mb-2" style="font-size:13px;font-weight:600;color:#FF4F81;">{{ member.role }}</p>
+                    <p class="mb-0" style="font-size:14px;color:#777;line-height:1.7;">{{ member.description }}</p>
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="mb-0 text-center" style="color:#777;">Our team profiles will be here soon. In the meantime, get in touch with us anytime.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="p-4 p-md-5 text-center" style="background:#fff;border:1px solid #f0e0e7;border-radius:18px;">
+        <h2 class="mb-2" style="font-weight:800;color:#222;">Want to know more?</h2>
+        <p class="mb-4" style="color:#777;">Learn what guides us or reach out to our team.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="{% url 'mission' %}" class="btn rounded-pill px-4 text-white" style="background:#FF4F81;">Our mission</a>
+            <a href="{% url 'vision' %}" class="btn btn-outline-dark rounded-pill px-4">Our vision</a>
+            <a href="{% url 'contact' %}" class="btn btn-outline-dark rounded-pill px-4">Contact us</a>
+        </div>
+    </section>
+</main>
+{% endblock %}

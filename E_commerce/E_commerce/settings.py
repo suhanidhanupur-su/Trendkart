@@ -158,8 +158,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-RAZORPAY_API_KEY = 'rzp_test_T8JznkLSaHNKGE'      # apni key daalo
-RAZORPAY_API_SECRET = '02VXYIvkEr7tBo98rcue0dtS'    # apna secret daalo
+RAZORPAY_API_KEY = 'rzp_test_TwVeyXT0nLzWHz'      # apni key daalo
+RAZORPAY_API_SECRET = 'kFHyr2h1HN4BqD4IDIYnB1G7'    # apna secret daalo
 
 
 

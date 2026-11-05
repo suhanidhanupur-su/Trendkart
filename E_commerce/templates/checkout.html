@@ -79,7 +79,7 @@
 
                                 <label style="flex:1; border:1.5px solid #eee; border-radius:10px;
                                               padding:14px; cursor:pointer; text-align:center;"
-                                       id="cod-label">
+                                       id="cod-label" onclick="selectPayment('COD')">
                                     <input type="radio" name="payment_method" value="COD"
                                            checked onchange="selectPayment('COD')"
                                            style="display:none;">
@@ -89,7 +89,7 @@
 
                                 <label style="flex:1; border:1.5px solid #eee; border-radius:10px;
                                               padding:14px; cursor:pointer; text-align:center;"
-                                       id="online-label">
+                                       id="online-label" onclick="selectPayment('Online')">
                                     <input type="radio" name="payment_method" value="Online"
                                            onchange="selectPayment('Online')"
                                            style="display:none;">
@@ -98,6 +98,16 @@
                                 </label>
 
                             </div>
+
+                            {% if razorpay_error %}
+                            <div class="alert alert-warning mt-3 py-2 px-3 d-flex align-items-center gap-2" style="font-size:12px; border-radius:8px;">
+                                <span>⚠️</span>
+                                <div>
+                                    <strong>Razorpay Notice:</strong> Credentials authentication error (<code>{{ razorpay_error }}</code>).
+                                    Testing ke liye <strong>Demo Online Payment</strong> simulation active hai. Asli payment ke liye <code>settings.py</code> mein valid Razorpay Key & Secret dalein.
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
 
                         <div class="col-12 mt-2">
@@ -156,16 +166,79 @@
     </div>
 </div>
 
+<!-- Demo Online Payment Modal -->
+<div class="modal fade" id="demoPaymentModal" tabindex="-1" aria-labelledby="demoPaymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:18px; border:1.5px solid #FF4F81; overflow:hidden;">
+      <div class="modal-header text-white" style="background:linear-gradient(135deg, #1a0010, #3d0020, #FF4F81);">
+        <h5 class="modal-title fw-bold" id="demoPaymentModalLabel">💳 Online Payment (Simulation)</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 text-center">
+        <p class="text-muted mb-1" style="font-size:13px;">Total Payable Amount</p>
+        <h2 class="fw-bold mb-3" style="color:#FF4F81;">₹{{ total }}</h2>
+        
+        <div class="p-3 mb-3 text-start" style="background:#FFF5F7; border:1px solid #ffc0d1; border-radius:12px; font-size:12px;">
+          <p class="mb-1 fw-bold text-dark">ℹ️ Test Payment Simulator</p>
+          <p class="mb-0 text-muted" style="line-height:1.6;">
+            Settings mein invalid test keys hone ki wajah se yeh demo simulation active hai. Neeche kisi bhi method se instant payment complete karein.
+          </p>
+        </div>
+
+        <div class="d-flex flex-column gap-2 mb-3">
+          <button type="button" class="btn btn-outline-dark py-2 text-start d-flex justify-content-between align-items-center" onclick="completeDemoPayment('UPI')">
+            <span>📱 UPI (GPay, PhonePe, Paytm)</span>
+            <span class="badge bg-success">Pay ₹{{ total }}</span>
+          </button>
+          <button type="button" class="btn btn-outline-dark py-2 text-start d-flex justify-content-between align-items-center" onclick="completeDemoPayment('Card')">
+            <span>💳 Debit / Credit Card</span>
+            <span class="badge bg-success">Pay ₹{{ total }}</span>
+          </button>
+          <button type="button" class="btn btn-outline-dark py-2 text-start d-flex justify-content-between align-items-center" onclick="completeDemoPayment('NetBanking')">
+            <span>🏦 Net Banking</span>
+            <span class="badge bg-success">Pay ₹{{ total }}</span>
+          </button>
+        </div>
+
+        <button type="button" class="btn w-100 py-2 text-white fw-bold" style="background:#FF4F81; border-radius:10px;" onclick="completeDemoPayment('Direct')">
+          ⚡ Complete Payment & Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Razorpay Script SDK -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
 function selectPayment(type) {
     const isCod = type === 'COD';
+    const codRadio = document.querySelector('input[value="COD"]');
+    const onlineRadio = document.querySelector('input[value="Online"]');
+    if (codRadio && onlineRadio) {
+        codRadio.checked = isCod;
+        onlineRadio.checked = !isCod;
+    }
     document.getElementById('cod-label').style.border = isCod ? '1.5px solid #FF4F81' : '1.5px solid #eee';
     document.getElementById('online-label').style.border = !isCod ? '1.5px solid #FF4F81' : '1.5px solid #eee';
     document.getElementById('cod-label').style.background = isCod ? '#FFF5F7' : '#fff';
     document.getElementById('online-label').style.background = !isCod ? '#FFF5F7' : '#fff';
+}
+
+function completeDemoPayment(method) {
+    document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.random().toString(36).substring(2, 12);
+    document.getElementById('razorpay_order_id').value = "{{ razorpay_order_id }}";
+    document.getElementById('razorpay_signature').value = "sig_mock_verified";
+    
+    // Close modal if open
+    const modalEl = document.getElementById('demoPaymentModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if (modalInstance) {
+        modalInstance.hide();
+    }
+    
+    document.querySelector('form').submit();
 }
 
 function handlePayment(e) {
@@ -177,8 +250,12 @@ function handlePayment(e) {
         e.preventDefault();
 
         const orderId = "{{ razorpay_order_id }}";
-        if (!orderId || orderId === "None" || orderId === "") {
-            alert("Backend error: Razorpay Order ID generate nahi ho saki. Please check views.py!");
+        const isMock = {{ is_mock_order|yesno:"true,false" }};
+
+        // If in Demo/Mock Mode, show simulation modal
+        if (isMock || !orderId || orderId === "None" || orderId === "") {
+            const demoModal = new bootstrap.Modal(document.getElementById('demoPaymentModal'));
+            demoModal.show();
             return false;
         }
 
@@ -190,7 +267,6 @@ function handlePayment(e) {
             description: "Order Payment",
             order_id: orderId,
             
-            // ✅ Methods explicitly defined as per request
             method: {
                 upi: true,
                 card: true,
@@ -214,7 +290,7 @@ function handlePayment(e) {
             },
             modal: {
                 ondismiss: function() {
-                    alert('Payment cancelled. Try again!');
+                    console.log('Payment cancelled');
                 }
             }
         };
