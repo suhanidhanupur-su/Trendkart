@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.venv/
+staticfiles/
+E_commerce/staticfiles/
+.DS_Store

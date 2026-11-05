@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "E_commerce/E_commerce/wsgi.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "E_commerce/staticfiles"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "E_commerce/staticfiles/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "E_commerce/E_commerce/wsgi.py"
+    }
+  ]
+}

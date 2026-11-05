@@ -13,9 +13,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings
-SECRET_KEY = 'django-insecure-**nj1_v0qudh+93myc7=3@+s&l)dn(6a9esk10tz3v$rl#55zc'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-**nj1_v0qudh+93myc7=3@+s&l)dn(6a9esk10tz3v$rl#55zc')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = ['*']
 
@@ -26,6 +26,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.trycloudflare.com',
     'https://*.github.dev',
     'https://*.app.github.dev',
+    'https://*.vercel.app',
+    'https://trendkart-ochre.vercel.app',
 ]
 
 
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,6 +80,7 @@ AUTH_USER_MODEL = 'Trendkart.CustomUser'
 
 
 # Database
+import dj_database_url
 
 DATABASES = {
     'default': {
@@ -84,6 +88,10 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
 
 
 # Password validation
@@ -117,11 +125,22 @@ USE_TZ = True
 
 # Static Files
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Static')
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
 
 
 # Media Files
@@ -158,8 +177,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-RAZORPAY_API_KEY = 'rzp_test_TwVeyXT0nLzWHz'      # apni key daalo
-RAZORPAY_API_SECRET = 'kFHyr2h1HN4BqD4IDIYnB1G7'    # apna secret daalo
+RAZORPAY_API_KEY = os.environ.get('RAZORPAY_API_KEY', 'rzp_test_TwVeyXT0nLzWHz')
+RAZORPAY_API_SECRET = os.environ.get('RAZORPAY_API_SECRET', 'kFHyr2h1HN4BqD4IDIYnB1G7')
 
 
 

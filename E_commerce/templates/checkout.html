@@ -3,18 +3,20 @@
 
 {% block content %}
 
-<div class="w-100 mb-4 d-flex align-items-center justify-content-center"
-     style="background:linear-gradient(90deg,#000,#FF4F81,#000); height:72px;">
-    <h3 class="mb-0 fw-bold text-white" style="letter-spacing:3px;">📋 Checkout</h3>
+<!-- Header Banner -->
+<div class="w-100 mb-4 d-flex align-items-center justify-content-center text-center py-3 px-2"
+     style="background:linear-gradient(90deg,#000,#FF4F81,#000); min-height:64px;">
+    <h3 class="mb-0 fw-bold text-white fs-4 fs-md-3" style="letter-spacing:2px;">📋 Checkout</h3>
 </div>
 
 <div class="container mb-5">
     <div class="row g-4">
 
-        <!-- Left: Form -->
-        <div class="col-md-7">
-            <div style="background:#fff; border-radius:16px; padding:28px;
-                        border:1.5px solid #FF4F81;
+        <!-- Left: Delivery Details & Payment Form -->
+        <div class="col-12 col-lg-7">
+            <div class="card border-0 shadow-sm"
+                 style="background:#fff; border-radius:16px; padding:clamp(16px, 4vw, 28px);
+                        border:1.5px solid #FF4F81 !important;
                         box-shadow:0 4px 18px rgba(255,79,129,0.08);">
 
                 <h5 class="fw-bold mb-4" style="color:#FF4F81;">
@@ -30,92 +32,93 @@
 
                     <div class="row g-3">
 
-                        <div class="col-md-6">
+                        <div class="col-12 col-sm-6">
                             <label style="font-size:12px; font-weight:600; color:#FF4F81;">FULL NAME</label>
                             <input type="text" name="full_name"
                                    value="{{ user.full_name }}"
                                    class="form-control mt-1"
-                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 12px;"
                                    required>
                         </div>
 
-                        <div class="col-md-6">
-                            <label style="font-size:12px; font-weight:600; color:#FF4F81;">MOBILE</label>
-                            <input type="text" name="mobile"
+                        <div class="col-12 col-sm-6">
+                            <label style="font-size:12px; font-weight:600; color:#FF4F81;">MOBILE NUMBER</label>
+                            <input type="tel" name="mobile"
                                    value="{{ user.mobile_no }}"
                                    class="form-control mt-1"
-                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 12px;"
                                    required>
                         </div>
 
                         <div class="col-12">
-                            <label style="font-size:12px; font-weight:600; color:#FF4F81;">ADDRESS</label>
+                            <label style="font-size:12px; font-weight:600; color:#FF4F81;">DELIVERY ADDRESS</label>
                             <textarea name="address" rows="2"
                                       class="form-control mt-1"
-                                      style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;"
+                                      style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 12px;"
                                       required>{{ user.address }}</textarea>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-12 col-sm-6">
                             <label style="font-size:12px; font-weight:600; color:#FF4F81;">CITY</label>
                             <input type="text" name="city"
                                    class="form-control mt-1"
-                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 12px;"
                                    required>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-12 col-sm-6">
                             <label style="font-size:12px; font-weight:600; color:#FF4F81;">PINCODE</label>
                             <input type="text" name="pincode"
                                    class="form-control mt-1"
-                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px;"
+                                   style="border:1.5px solid #ffc0d1; background:#FFF5F7; border-radius:8px; padding:10px 12px;"
                                    required>
                         </div>
 
                         <!-- Payment Method -->
                         <div class="col-12">
                             <label style="font-size:12px; font-weight:600; color:#FF4F81;">PAYMENT METHOD</label>
-                            <div class="d-flex gap-3 mt-2">
+                            <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 mt-2">
 
-                                <label style="flex:1; border:1.5px solid #eee; border-radius:10px;
-                                              padding:14px; cursor:pointer; text-align:center;"
+                                <label style="flex:1; border:1.5px solid #FF4F81; background:#FFF5F7; border-radius:10px;
+                                              padding:14px; cursor:pointer; text-align:center; transition:all 0.2s ease;"
                                        id="cod-label" onclick="selectPayment('COD')">
                                     <input type="radio" name="payment_method" value="COD"
                                            checked onchange="selectPayment('COD')"
                                            style="display:none;">
                                     <div style="font-size:24px;">💵</div>
-                                    <div style="font-size:13px; font-weight:700; margin-top:4px;">Cash on Delivery</div>
+                                    <div style="font-size:14px; font-weight:700; margin-top:4px;">Cash on Delivery</div>
                                 </label>
 
-                                <label style="flex:1; border:1.5px solid #eee; border-radius:10px;
-                                              padding:14px; cursor:pointer; text-align:center;"
+                                <label style="flex:1; border:1.5px solid #eee; background:#fff; border-radius:10px;
+                                              padding:14px; cursor:pointer; text-align:center; transition:all 0.2s ease;"
                                        id="online-label" onclick="selectPayment('Online')">
                                     <input type="radio" name="payment_method" value="Online"
                                            onchange="selectPayment('Online')"
                                            style="display:none;">
                                     <div style="font-size:24px;">💳</div>
-                                    <div style="font-size:13px; font-weight:700; margin-top:4px;">Online Payment</div>
+                                    <div style="font-size:14px; font-weight:700; margin-top:4px;">Online Payment</div>
                                 </label>
 
                             </div>
 
                             {% if razorpay_error %}
                             <div class="alert alert-warning mt-3 py-2 px-3 d-flex align-items-center gap-2" style="font-size:12px; border-radius:8px;">
-                                <span>⚠️</span>
+                                <span>ℹ️</span>
                                 <div>
-                                    <strong>Razorpay Notice:</strong> Credentials authentication error (<code>{{ razorpay_error }}</code>).
-                                    Testing ke liye <strong>Demo Online Payment</strong> simulation active hai. Asli payment ke liye <code>settings.py</code> mein valid Razorpay Key & Secret dalein.
+                                    <strong>Payment Gateway Notice:</strong> <code>{{ razorpay_error }}</code>.
+                                    Demo Online Payment simulation is active for testing.
                                 </div>
                             </div>
                             {% endif %}
                         </div>
 
-                        <div class="col-12 mt-2">
+                        <div class="col-12 mt-3">
                             <button type="submit"
-                                    style="width:100%; background:#FF4F81; color:#fff; border:none;
-                                           border-radius:10px; padding:14px; font-size:15px;
-                                           font-weight:700; cursor:pointer;">
-                                ✅ Place Order
+                                    class="w-100 text-white fw-bold d-flex align-items-center justify-content-center gap-2"
+                                    style="background:#FF4F81; border:none; border-radius:10px;
+                                           padding:14px; font-size:15px; cursor:pointer; transition:background 0.2s ease;">
+                                <span>✅</span>
+                                <span>Place Order</span>
                             </button>
                         </div>
 
@@ -125,40 +128,44 @@
         </div>
 
         <!-- Right: Order Summary -->
-        <div class="col-md-5">
-            <div style="background:#fff; border-radius:16px; padding:24px;
-                        border:1.5px solid #FF4F81;
+        <div class="col-12 col-lg-5">
+            <div class="card border-0 shadow-sm"
+                 style="background:#fff; border-radius:16px; padding:clamp(16px, 4vw, 24px);
+                        border:1.5px solid #FF4F81 !important;
                         box-shadow:0 4px 18px rgba(255,79,129,0.08);
-                        position:sticky; top:20px;">
+                        position:relative;">
 
                 <h5 class="fw-bold mb-3" style="color:#FF4F81;">🛒 Order Summary</h5>
 
-                {% for item in cart_items %}
-                <div class="d-flex align-items-center gap-3 mb-3 pb-3"
-                     style="border-bottom:1px solid #f5e0e7;">
-                    <img src="{{ item.product.product_image.url }}"
-                         width="55" height="55"
-                         style="object-fit:cover; border-radius:8px; flex-shrink:0;">
-                    <div class="flex-grow-1">
-                        <p style="font-size:13px; font-weight:700; margin-bottom:2px;">{{ item.product.product_name }}</p>
-                        <p style="font-size:12px; color:#888; margin:0;">Qty: {{ item.quantity }}</p>
+                <div class="order-items-scroll pe-1 mb-3" style="max-height:320px; overflow-y:auto;">
+                    {% for item in cart_items %}
+                    <div class="d-flex align-items-center gap-3 mb-3 pb-3"
+                         style="border-bottom:1px solid #f5e0e7;">
+                        <img src="{{ item.product.product_image.url }}"
+                             width="55" height="55"
+                             class="rounded"
+                             style="object-fit:cover; flex-shrink:0;">
+                        <div class="flex-grow-1 min-w-0">
+                            <p class="text-truncate mb-1" style="font-size:13px; font-weight:700;" title="{{ item.product.product_name }}">{{ item.product.product_name }}</p>
+                            <p class="text-muted mb-0" style="font-size:12px;">Qty: {{ item.quantity }} × ₹{{ item.product.product_price }}</p>
+                        </div>
+                        <p class="mb-0 fw-bold text-nowrap" style="color:#FF4F81;">₹{{ item.total_price }}</p>
                     </div>
-                    <p style="font-weight:700; color:#FF4F81; margin:0;">₹{{ item.total_price }}</p>
+                    {% endfor %}
                 </div>
-                {% endfor %}
 
                 <div class="d-flex justify-content-between mb-2" style="font-size:14px;">
-                    <span style="color:#888;">Subtotal</span>
+                    <span class="text-muted">Subtotal</span>
                     <span class="fw-bold">₹{{ total }}</span>
                 </div>
                 <div class="d-flex justify-content-between mb-3" style="font-size:14px;">
-                    <span style="color:#888;">Delivery</span>
-                    <span style="color:green; font-weight:600;">FREE</span>
+                    <span class="text-muted">Delivery</span>
+                    <span class="text-success fw-bold">FREE</span>
                 </div>
-                <hr style="border-color:#f0e0e7;">
-                <div class="d-flex justify-content-between" style="font-size:16px;">
-                    <span class="fw-bold">Total</span>
-                    <span class="fw-bold" style="color:#FF4F81;">₹{{ total }}</span>
+                <hr style="border-color:#f0e0e7;" class="my-2">
+                <div class="d-flex justify-content-between align-items-center pt-2" style="font-size:16px;">
+                    <span class="fw-bold">Total Amount</span>
+                    <span class="fw-bold fs-5" style="color:#FF4F81;">₹{{ total }}</span>
                 </div>
             </div>
         </div>
@@ -166,22 +173,22 @@
     </div>
 </div>
 
-<!-- Demo Online Payment Modal -->
+<!-- Demo Online Payment Simulation Modal -->
 <div class="modal fade" id="demoPaymentModal" tabindex="-1" aria-labelledby="demoPaymentModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered px-2">
     <div class="modal-content" style="border-radius:18px; border:1.5px solid #FF4F81; overflow:hidden;">
       <div class="modal-header text-white" style="background:linear-gradient(135deg, #1a0010, #3d0020, #FF4F81);">
-        <h5 class="modal-title fw-bold" id="demoPaymentModalLabel">💳 Online Payment (Simulation)</h5>
+        <h5 class="modal-title fw-bold fs-6 fs-sm-5" id="demoPaymentModalLabel">💳 Online Payment (Simulation)</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-4 text-center">
+      <div class="modal-body p-3 p-sm-4 text-center">
         <p class="text-muted mb-1" style="font-size:13px;">Total Payable Amount</p>
         <h2 class="fw-bold mb-3" style="color:#FF4F81;">₹{{ total }}</h2>
         
         <div class="p-3 mb-3 text-start" style="background:#FFF5F7; border:1px solid #ffc0d1; border-radius:12px; font-size:12px;">
           <p class="mb-1 fw-bold text-dark">ℹ️ Test Payment Simulator</p>
           <p class="mb-0 text-muted" style="line-height:1.6;">
-            Settings mein invalid test keys hone ki wajah se yeh demo simulation active hai. Neeche kisi bhi method se instant payment complete karein.
+            Select any simulated payment method below to complete your order instantly.
           </p>
         </div>
 
@@ -191,7 +198,7 @@
             <span class="badge bg-success">Pay ₹{{ total }}</span>
           </button>
           <button type="button" class="btn btn-outline-dark py-2 text-start d-flex justify-content-between align-items-center" onclick="completeDemoPayment('Card')">
-            <span>💳 Debit / Credit Card</span>
+            <span>💳 Credit / Debit Card</span>
             <span class="badge bg-success">Pay ₹{{ total }}</span>
           </button>
           <button type="button" class="btn btn-outline-dark py-2 text-start d-flex justify-content-between align-items-center" onclick="completeDemoPayment('NetBanking')">
@@ -200,7 +207,7 @@
           </button>
         </div>
 
-        <button type="button" class="btn w-100 py-2 text-white fw-bold" style="background:#FF4F81; border-radius:10px;" onclick="completeDemoPayment('Direct')">
+        <button type="button" class="btn w-100 py-3 text-white fw-bold" style="background:#FF4F81; border-radius:10px;" onclick="completeDemoPayment('Direct')">
           ⚡ Complete Payment & Place Order
         </button>
       </div>
@@ -231,7 +238,6 @@ function completeDemoPayment(method) {
     document.getElementById('razorpay_order_id').value = "{{ razorpay_order_id }}";
     document.getElementById('razorpay_signature').value = "sig_mock_verified";
     
-    // Close modal if open
     const modalEl = document.getElementById('demoPaymentModal');
     const modalInstance = bootstrap.Modal.getInstance(modalEl);
     if (modalInstance) {
@@ -286,11 +292,11 @@ function handlePayment(e) {
                 contact: "{{ user.mobile_no }}"
             },
             theme: {
-                color: "#C9607A"
+                color: "#FF4F81"
             },
             modal: {
                 ondismiss: function() {
-                    console.log('Payment cancelled');
+                    console.log('Payment modal dismissed');
                 }
             }
         };

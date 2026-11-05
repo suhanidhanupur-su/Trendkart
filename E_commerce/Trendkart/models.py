@@ -48,8 +48,7 @@ class Product(models.Model):
     product_description = models.TextField()
     product_image = models.ImageField(upload_to='products/')
     
-    # NAYE INVENTORY FIELDS:
-# Is line ko dhundo aur change karo:
+    # Inventory fields:
     sku = models.CharField(max_length=50, unique=True, null=True, blank=True, default=uuid.uuid4)
     stock = models.IntegerField(default=0)
 
@@ -121,7 +120,7 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='COD')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     
-    # Sirf ek baar status field rakho aur default 'Confirmed' kar do:
+    # Order status field (default: Confirmed)
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='Confirmed')
     created_at = models.DateTimeField(auto_now_add=True)
 

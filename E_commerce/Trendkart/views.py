@@ -484,14 +484,14 @@ def checkout(request):
     cart_items = Cart.objects.filter(user=request.user)
 
     if not cart_items:
-        messages.error(request, 'Cart khali hai!')
+        messages.error(request, 'Your cart is empty!')
         return redirect('cart')
 
     total = sum(item.total_price() for item in cart_items)
     razorpay_order_id = ""
     razorpay_error = None
 
-    # Razorpay client initialize karo
+    # Initialize Razorpay client
     client = razorpay.Client(
         auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET)
     )
@@ -510,7 +510,7 @@ def checkout(request):
                 payment_verified = True
             else:
                 if not payment_id or not order_id or not signature:
-                    messages.error(request, 'Payment incomplete ya cancel ho gayi thi!')
+                    messages.error(request, 'Payment was incomplete or cancelled!')
                     return redirect('checkout')
 
                 try:

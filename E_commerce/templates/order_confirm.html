@@ -2,60 +2,64 @@
 
 {% block content %}
 
-<div class="container mt-5 mb-5" style="max-width:550px;">
-    <div style="background:#fff; border-radius:16px; padding:40px 32px;
-                border:1.5px solid #FF4F81; text-align:center;
-                box-shadow:0 4px 18px rgba(255,79,129,0.1);">
+<div class="container my-4 my-md-5 px-3" style="max-width:560px;">
+    <div class="card border-0 shadow-sm"
+         style="background:#fff; border-radius:18px; padding:clamp(24px, 5vw, 40px) clamp(16px, 4vw, 32px);
+                border:1.5px solid #FF4F81 !important; text-align:center;
+                box-shadow:0 6px 24px rgba(255,79,129,0.1);">
 
-        <div style="font-size:64px; margin-bottom:16px;">🎉</div>
-        <h2 class="fw-bold" style="color:#FF4F81;">Order Place Ho Gaya!</h2>
-        <p style="color:#888; margin:8px 0 20px;">
-            Order ID: <strong style="color:#222;">#{{ order.id }}</strong>
+        <div style="font-size:clamp(48px, 8vw, 64px); margin-bottom:12px;">🎉</div>
+        <h2 class="fw-bold mb-1" style="color:#FF4F81; font-size:clamp(22px, 4vw, 28px);">
+            Order Placed Successfully!
+        </h2>
+        <p class="text-muted mb-4" style="font-size:14px;">
+            Order ID: <strong class="text-dark">#{{ order.id }}</strong>
         </p>
 
-        <div style="background:#FFF5F7; border-radius:12px; padding:18px; text-align:left; margin-bottom:24px;">
+        <!-- Order Summary Card -->
+        <div style="background:#FFF5F7; border:1px solid #ffc0d1; border-radius:14px; padding:18px; text-align:left; margin-bottom:20px;">
             <div class="d-flex justify-content-between mb-2">
-                <span style="color:#888; font-size:13px;">Name</span>
-                <span style="font-weight:700; font-size:13px;">{{ order.full_name }}</span>
+                <span class="text-muted" style="font-size:13px;">Customer</span>
+                <span class="fw-bold text-end" style="font-size:13px;">{{ order.full_name }}</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
-                <span style="color:#888; font-size:13px;">Mobile</span>
-                <span style="font-weight:700; font-size:13px;">{{ order.mobile }}</span>
+                <span class="text-muted" style="font-size:13px;">Mobile</span>
+                <span class="fw-bold text-end" style="font-size:13px;">{{ order.mobile }}</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
-                <span style="color:#888; font-size:13px;">Address</span>
-                <span style="font-weight:700; font-size:13px;">{{ order.address }}, {{ order.city }} - {{ order.pincode }}</span>
+                <span class="text-muted" style="font-size:13px;">Delivery Address</span>
+                <span class="fw-bold text-end ps-3" style="font-size:13px;">{{ order.address }}, {{ order.city }} - {{ order.pincode }}</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
-                <span style="color:#888; font-size:13px;">Payment</span>
-                <span style="font-weight:700; font-size:13px;">{{ order.payment_method }}</span>
+                <span class="text-muted" style="font-size:13px;">Payment Method</span>
+                <span class="fw-bold text-end" style="font-size:13px;">{{ order.get_payment_method_display }}</span>
             </div>
-            <hr style="border-color:#f0e0e7;">
-            <div class="d-flex justify-content-between">
-                <span style="color:#888; font-size:14px;">Total Amount</span>
-                <span style="font-weight:700; font-size:16px; color:#FF4F81;">₹{{ order.total_amount }}</span>
+            <hr style="border-color:#f0e0e7;" class="my-2">
+            <div class="d-flex justify-content-between align-items-center pt-1">
+                <span class="text-muted fw-bold" style="font-size:14px;">Total Amount</span>
+                <span class="fw-bold fs-5" style="color:#FF4F81;">₹{{ order.total_amount }}</span>
             </div>
         </div>
 
-        <div style="background:#e8f5e9; border-radius:10px; padding:12px; margin-bottom:24px;">
-            <p style="color:#2e7d32; font-size:13px; font-weight:600; margin:0;">
-                ✅ Your order has been successfully placed!<br>
-        It will be delivered soon. 🚚
+        <div style="background:#e8f5e9; border:1px solid #c8e6c9; border-radius:12px; padding:14px; margin-bottom:24px;">
+            <p style="color:#2e7d32; font-size:13px; font-weight:600; margin:0; line-height:1.6;">
+                ✅ Your order has been placed and confirmed!<br>
+                It will be prepared and delivered to your doorstep soon. 🚚
             </p>
         </div>
 
-        <div class="d-flex gap-3">
+        <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3">
             <a href="{% url 'my_orders' %}"
-               style="flex:1; background:#FF4F81; color:#fff; border-radius:10px;
-                      padding:12px; text-align:center; text-decoration:none;
-                      font-weight:700; font-size:13px;">
-                View My Orders
+               class="btn text-white fw-bold d-flex align-items-center justify-content-center"
+               style="flex:1; background:#FF4F81; border-radius:10px;
+                      padding:12px; font-size:14px; text-decoration:none;">
+                📦 View My Orders
             </a>
             <a href="{% url 'product' %}"
-               style="flex:1; background:#111; color:#fff; border-radius:10px;
-                      padding:12px; text-align:center; text-decoration:none;
-                      font-weight:700; font-size:13px;">
-                Continue Shopping
+               class="btn btn-dark fw-bold d-flex align-items-center justify-content-center"
+               style="flex:1; border-radius:10px;
+                      padding:12px; font-size:14px; text-decoration:none;">
+                🛍️ Continue Shopping
             </a>
         </div>
 
